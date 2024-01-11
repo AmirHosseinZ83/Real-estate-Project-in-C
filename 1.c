@@ -41,6 +41,8 @@ void rigester(void);
 void setting(void);
 void reports(void);
 void adminmenu();
+void Sell();
+void Rent();
 
 
 void main (void)
@@ -68,7 +70,7 @@ void menu(void)
             break;
         case '3':
             system("cls");
-            printf("The program was closed");
+            printf("\nThe Program Was Closed\n");
             exit(0);
         default :
             fflush(stdin);
@@ -92,47 +94,81 @@ void su(void)
     printf("Sign UP function --- (If you want to go to the menu, press 0) \n");
     printf("Ok you must enter your information for Sign Up !\n");
 
+
+    struct sup
+        {
+
+            char username[50];
+            char name[50];
+            char lastname[50];
+            char ncode[50];
+            char phone[50];
+            char email[50];
+            char password[50];
+
+
+        };
+
+    struct sup people;
+
+
     printf ("\n-User Name (if you enter the single character \"0\" , you will return to the menu) : ");
-    scanf("%s",&temp);
+    scanf("%s",temp);
     if (strcmp(temp ,"0") == 0)
     {
         fflush(stdin);
         system("cls");
         menu();
     }
-    fputs(temp , ui);
-    fputs("\n",ui);
+    else
+        strcpy(people.username,temp);
 
+    getchar();
     printf("\n-Name : ");
-    scanf("%s",&temp);
-    fputs(temp , ui);
-    fputs("\n",ui);
+x1: gets(people.name);
 
     printf("\n-Last Name : ");
-    scanf("%s",&temp);
-    fputs(temp , ui);
-    fputs("\n",ui);
-
+    gets(people.lastname);
     printf("\n-National Code : ");
-    scanf("%s",&temp);
-    fputs(temp , ui);
-    fputs("\n",ui);
+    scanf("%s", people.ncode);
 
     printf("\n-Mobile Number : ");
-    scanf("%s",&temp);
-    fputs(temp , ui);
-    fputs("\n",ui);
+    scanf("%s",people.phone);
 
     printf("\n-Email Address : ");
-    scanf("%s",&temp);
-    fputs(temp , ui);
-    fputs("\n",ui);
+    scanf("%s", people.email);
 
-    printf("\n-Password : ");
-    scanf("%s",&temp);
-    fputs(temp , ui);
-    fputs("\n",ui);
+x2:  printf("\n-Password : ");
+    char temp2[50];
+    scanf("%s", temp2);
+    printf("\n-Repeat The Password Again: ");
+    scanf("%s", temp);
+    if(strcmp(temp ,temp2) == 0)
+        strcpy(people.password,temp);
+    else
+    {
+         printf("\nPasswords are not the Same !\n");
+        goto x2;
+    }
+    fflush(stdin);
 
+    fputs("\n",ui);
+    fputs(people.username , ui);
+    fputs("\n",ui);
+    fputs(people.name , ui);
+    fputs("\n",ui);
+    fputs(people.lastname , ui);
+    fputs("\n",ui);
+    fputs(people.ncode , ui);
+    fputs("\n",ui);
+    fputs(people.phone , ui);
+    fputs("\n",ui);
+    fputs(people.email , ui);
+    fputs("\n",ui);
+    fputs(people.password , ui);
+
+
+    fflush(stdin);
 
     fclose(ui);
     printf("\nDONE !!\n This account was created.\n");
@@ -250,7 +286,7 @@ bck:printf("Enter username: \n");
     else
     {
         j =3;
-        bck1:printf("Enter password (%d attempts left): \n" , j);
+bck1:   printf("Enter password (%d attempts left): \n" , j);
         scanf("%s", inputPassword);
         loggedIn = 0;
         current = head;
@@ -291,19 +327,22 @@ bck:printf("Enter username: \n");
     {
         system("cls");
         fflush(stdin);
-        menuuser();
+        menuuser(1);
     }
     if (loggedIn == 2)
     {
         system("cls");
         fflush(stdin);
-        adminmenu();
+        menuuser(2);
     }
 
 }
-void menuuser()
+void menuuser(int admin)
 {
-    printf("Limited access for %s \n" ,current->username);
+    if (admin == 2)
+        printf("ADMINISTRATOR - FULL access for %s \n" ,current->username);
+    else
+        printf("Limited access for %s \n" ,current->username);
     printf("1 - Register new information\n2 - Delete information\n3 - reports\n4 - User account settings\n5 - Log out (return to the previous menu)\n\n\n>Please Enter Your Choice: ");
 
     char input;
@@ -311,68 +350,208 @@ void menuuser()
     switch (input)
     {
         case '1':
+            fflush(stdin);
             system("cls");
-            rigester();
+            printf("1 - SELL\n2 - RENT\n3 - Back To Menu\n\n\n>Please Enter Your Choice: ");
+            input = getchar();
+            switch (input)
+            {
+                case '1':
+                    fflush(stdin);
+                    system("cls");
+                    if (admin == 2)
+                        Sell(2);
+                    else
+                        Sell(1);
+                    break;
+                case '2':
+                    fflush(stdin);
+                    system("cls");
+                    if (admin == 2)
+                        Rent(2);
+                    else
+                        Rent(1);
+                    break;
+                case '3':
+                    fflush(stdin);
+                    system("cls");
+                    if (admin == 2)
+                        menuuser(2);
+                    else
+                        menuuser(1);
+                default :
+                    fflush(stdin);
+                    system("cls");
+                    if (admin == 2)
+                        menuuser(2);
+                    else
+                        menuuser(1);
+            }
             break;
         case '2':
+            fflush(stdin);
             system("cls");
-            rigester();
             break;
         case '3':
+            fflush(stdin);
             system("cls");
             reports();
             break;
         case '4':
+            fflush(stdin);
             system("cls");
             setting();
             break;
         case '5':
+            fflush(stdin);
             system("cls");
             menu();
         default :
             fflush(stdin);
             system("cls");
-            menuuser();
+            if (admin == 2)
+                menuuser(2);
+            else
+                menuuser(1);
     }
 }
-void adminmenu()
-{
-    printf("ADMINISTRATOR - FULL access for %s \n" ,current->username);
-    printf("1 - Register new information\n2 - Delete information\n3 - reports\n4 - User account settings\n5 - Log out (return to the previous menu)\n\n\n>Please Enter Your Choice: ");
 
-    char input;
-    input = getchar();
-    switch (input)
+
+void Sell(int admin)
+{
+    printf("1 - House registration\n2 - Office registration\n3 - Land registration\n4 - Return To The Previous Menu\n\n\n>Please Enter Your Choice: ");
+    char a = getchar();
+    if (a == '1')
     {
-        case '1':
-            system("cls");
-            rigester();
-            break;
-        case '2':
-            system("cls");
-            rigester();
-            break;
-        case '3':
-            system("cls");
-            reports();
-            break;
-        case '4':
-            system("cls");
-            setting();
-            break;
-        case '5':
-            system("cls");
-            menu();
-        default :
-            fflush(stdin);
-            system("cls");
-            menuuser();
+        fflush(stdin);
+        system("cls");
+        FILE *houses;
+        houses = fopen("House-Sale.txt","a");
+        if (houses == NULL)
+        {
+            printf("Error opening file!\n");
+            if (admin == 2)
+                menuuser(2);
+            else
+                menuuser(1);
+        }
+
+
+        struct infhs
+        {
+            int area;
+            char address[150];
+            char type[20];
+            int old;
+            int meterage;
+            int floor;
+            int total_meterage;
+            char phone[12];
+            int bedroom;
+            char cost[12];
+        };
+
+        struct infhs property;
+
+        printf("\n-Municipal area (indicating the location of the property in the city): ");
+        scanf("%d", &property.area);
+
+        getchar();
+        printf("\n-Address: ");
+        fgets(property.address, sizeof(property.address), stdin);
+
+        printf("\n-Property type (apartment or villa): ");
+        scanf("%s", &property.type);
+
+        printf("\n-Age: ");
+        scanf("%d", &property.old);
+
+        printf("\n-The size of the infrastructure: ");
+        scanf("%d", &property.meterage);
+
+        printf("\n-Floor: ");
+        scanf("%d", &property.floor);
+
+        printf("\n-The size of the main land of the property: ");
+        scanf("%d", &property.total_meterage);
+
+        printf("\n-Contact number of the owner: ");
+        scanf("%s", &property.phone);
+
+        printf("\n-Number of bedrooms: ");
+        scanf("%d", &property.bedroom);
+
+        printf("\n-Sales price: ");
+        scanf("%s", &property.cost);
+
+        printf("\n\n Press the key to register : ");
+        getch();
+        fflush(stdin);
+
+        fprintf(houses, "%d\n", property.area);
+        fprintf(houses, "%s", property.address);
+        fprintf(houses, "%s", property.type);
+        fprintf(houses , "\n%d\n%d\n%d\n", property.old, property.meterage, property.floor);
+        fprintf(houses, "%d\n%s\n%d\n%s\n", property.total_meterage, property.phone, property.bedroom, property.cost);
+
+
+        printf("\n\nThe property has been successfully registered.\nPress the key to return to the user menu :");
+        getch();
+        fflush(stdin);
+        fclose(houses);
+        system("cls");
+        if (admin == 2)
+            menuuser(2);
+        else
+            menuuser(1);
+    }
+    if (a == '2')
+    {
+
+    }
+    if (a == '3')
+    {
+
+    }
+    if (a == '4')
+    {
+        fflush(stdin);
+        system("cls");
+        if (admin == 2)
+            menuuser(2);
+        else
+            menuuser(1);
+    }
+    else
+    {
+        fflush(stdin);
+        system("cls");
+        if (admin == 2)
+            Sell(2);
+        else
+            Sell(1);
     }
 
-}
-void rigester()
-{
 
+}
+
+
+
+
+
+void Rent(int admin)
+{
+    printf("Rent");
+    getch();
+    printf("\nDONE !!\n This account was created.\n");
+    printf("\nPress a key for back to menu \n");
+    getch();
+    fflush(stdin);
+    system("cls");
+    if (admin == 2)
+        menuuser(2);
+    else
+        menuuser(1);
 }
 void setting()
 {
@@ -382,3 +561,4 @@ void reports()
 {
 
 }
+

@@ -1,0 +1,70 @@
+2
+Qazvin - Minoudar - Homa Squere - Shojaat Street - Num 37
+villa
+15
+150
+4
+300
+09191951595
+2
+20000
+1
+Qazvin - Saadi Fari - Resalat Street - Num 17
+apartment
+4
+200
+3
+400
+09905126432
+4
+90000
+2
+Qazvin - Ponak - Allahyari Street - Yas ally - Num4
+apartment
+7
+90
+3
+150
+09987654321
+1
+20000
+2
+qazvin - zibashahr - nokhbegan street - Num 29
+apartment
+4
+74
+2
+102
+09145632145
+1
+14200
+3
+qazvin - daneshgah - post street - num 44
+apartment
+11
+170
+3
+204
+09192900932
+3
+32000
+1
+qazvin - minoodar - shabnam ally - num 5 
+apartment
+23
+98
+3
+110
+09193878393
+2
+19000
+4
+Qazvin - Abiek - ahmadi ally - num 4
+villa
+16
+120
+1
+200
+09999999999
+4
+30400
