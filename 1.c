@@ -488,7 +488,7 @@ void Sell(int admin)
         getch();
         fflush(stdin);
 
-        fprintf(houses, "%d\n", property.area);
+        fprintf(houses, "1\n%d\n", property.area);
         fprintf(houses, "%s", property.address);
         fprintf(houses, "%s", property.type);
         fprintf(houses , "\n%d\n%d\n%d\n", property.old, property.meterage, property.floor);
@@ -504,14 +504,158 @@ void Sell(int admin)
             menuuser(2);
         else
             menuuser(1);
-    }
+        }
     if (a == '2')
     {
+        fflush(stdin);
+        system("cls");
+        FILE *officess;
+        officess = fopen("Office-Sell.txt","a");
+        if (officess == NULL)
+        {
+            printf("Error opening file!\n");
+            if (admin == 2)
+                menuuser(2);
+            else
+                menuuser(1);
+        }
 
+
+    struct infos
+    {
+        int area;
+        char address[150];
+        char type[50];
+        int old;
+        int meterage;
+        int floor;
+        int total_meterage;
+        char phone[12];
+        int oroom;
+        char cost[12];
+    };
+
+    struct infos offices;
+
+    printf("\n-Municipal area (indicating the location of the office in the city): ");
+    scanf("%d", &offices.area);
+
+    getchar();
+    printf("\n-Address: ");
+    fgets(offices.address, sizeof(offices.address), stdin);
+
+    printf("\n-Office type (Official administrative document, or just administrative position): ");
+    fgets(offices.type, sizeof(offices.type), stdin);
+
+    printf("\n-Age: ");
+    scanf("%d", &offices.old);
+
+    printf("\n-The size of the infrastructure: ");
+    scanf("%d", &offices.meterage);
+
+    printf("\n-Floor: ");
+    scanf("%d", &offices.floor);
+
+    printf("\n-The size of the main land of the Office: ");
+    scanf("%d", &offices.total_meterage);
+
+    printf("\n-Contact number of the owner: ");
+    scanf("%s", &offices.phone);
+
+    printf("\n-Number of Office rooms: ");
+    scanf("%d", &offices.oroom);
+
+    printf("\n-Sales price: ");
+    scanf("%s", &offices.cost);
+
+    printf("\n\n Press the key to register : ");
+    getch();
+    fflush(stdin);
+
+    fprintf(officess, "1\n%d\n", offices.area);
+    fprintf(officess, "%s", offices.address);
+    fprintf(officess, "%s", offices.type);
+    fprintf(officess , "%d\n%d\n%d\n", offices.old, offices.meterage, offices.floor);
+    fprintf(officess, "%d\n%s\n%d\n%s\n", offices.total_meterage, offices.phone, offices.oroom, offices.cost);
+
+
+    printf("\n\nThe Office has been successfully registered.\nPress the key to return to the user menu :");
+    getch();
+    fflush(stdin);
+    fclose(officess);
+    system("cls");
+    if (admin == 2)
+        menuuser(2);
+    else
+        menuuser(1);
     }
     if (a == '3')
     {
+        fflush(stdin);
+        system("cls");
+        FILE *lands;
+        lands = fopen("Land-Sell.txt","a");
+        if (lands == NULL)
+        {
+            printf("Error opening file!\n");
+            if (admin == 2)
+                menuuser(2);
+            else
+                menuuser(1);
+        }
 
+
+    struct infls
+    {
+        int area;
+        char address[150];
+        char type[50];
+        int meterage;
+        char phone[12];
+        char cost[12];
+    };
+
+    struct infls landss;
+
+    printf("\n-Municipal area (indicating the location of the Land in the city): ");
+    scanf("%d", &landss.area);
+
+    getchar();
+    printf("\n-Address: ");
+    fgets(landss.address, sizeof(landss.address), stdin);
+
+    printf("\n-Land type (agricultural or urban): ");
+    fgets(landss.type, sizeof(landss.type), stdin);
+
+    printf("\n-Size of land: ");
+    scanf("%d", &landss.meterage);
+
+    printf("\n-Contact number of the owner: ");
+    scanf("%s", &landss.phone);
+
+    printf("\n-Sales price: ");
+    scanf("%s", &landss.cost);
+
+    printf("\n\n Press the key to register : ");
+    getch();
+    fflush(stdin);
+
+    fprintf(lands, "1\n%d\n", landss.area);
+    fprintf(lands, "%s", landss.address);
+    fprintf(lands, "%s", landss.type);
+    fprintf(lands , "%d\n",landss.meterage);
+    fprintf(lands, "%s\n%s\n", landss.phone, landss.cost);
+
+
+    printf("\n\nThe Land has been successfully registered.\nPress the key to return to the user menu :");
+    getch();
+    fflush(stdin);
+    fclose(lands);
+    system("cls");
+    if (admin == 2)
+        menuuser(2);
+    else
+        menuuser(1);
     }
     if (a == '4')
     {
@@ -541,17 +685,274 @@ void Sell(int admin)
 
 void Rent(int admin)
 {
-    printf("Rent");
-    getch();
-    printf("\nDONE !!\n This account was created.\n");
-    printf("\nPress a key for back to menu \n");
+    printf("1 - House registration\n2 - Office registration\n3 - Land registration\n4 - Return To The Previous Menu\n\n\n>Please Enter Your Choice: ");
+    char a = getchar();
+    if (a == '1')
+    {
+        fflush(stdin);
+        system("cls");
+        FILE *houser;
+        houser = fopen("House-Rent.txt","a");
+        if (houser == NULL)
+        {
+            printf("Error opening file!\n");
+            if (admin == 2)
+                menuuser(2);
+            else
+                menuuser(1);
+        }
+
+
+        struct infhr
+        {
+            int area;
+            char address[150];
+            char type[20];
+            int old;
+            int meterage;
+            int floor;
+            int total_meterage;
+            char phone[12];
+            int bedroom;
+            char amount[12];
+            char mortgage[12];
+        };
+
+        struct infhr propertyr;
+
+        printf("\n-Municipal area (indicating the location of the property in the city): ");
+        scanf("%d", &propertyr.area);
+
+        getchar();
+        printf("\n-Address: ");
+        fgets(propertyr.address, sizeof(propertyr.address), stdin);
+
+        printf("\n-Property type (apartment or villa): ");
+        scanf("%s", &propertyr.type);
+
+        printf("\n-Age: ");
+        scanf("%d", &propertyr.old);
+
+        printf("\n-The size of the infrastructure: ");
+        scanf("%d", &propertyr.meterage);
+
+        printf("\n-Floor: ");
+        scanf("%d", &propertyr.floor);
+
+        printf("\n-The size of the main land of the property: ");
+        scanf("%d", &propertyr.total_meterage);
+
+        printf("\n-Contact number of the owner: ");
+        scanf("%s", &propertyr.phone);
+
+        printf("\n-Number of bedrooms: ");
+        scanf("%d", &propertyr.bedroom);
+
+        printf("\n-Home mortgage amount: ");
+        scanf("%s", &propertyr.mortgage);
+
+        printf("\n-The amount of monthly house rent: ");
+        scanf("%s", &propertyr.amount);
+
+        printf("\n\n Press the key to register : ");
+        getch();
+        fflush(stdin);
+
+        fprintf(houser, "1\n%d\n", propertyr.area);
+        fprintf(houser, "%s", propertyr.address);
+        fprintf(houser, "%s", propertyr.type);
+        fprintf(houser , "\n%d\n%d\n%d\n", propertyr.old, propertyr.meterage, propertyr.floor);
+        fprintf(houser, "%d\n%s\n%d\n%s\n%s\n", propertyr.total_meterage, propertyr.phone, propertyr.bedroom, propertyr.amount , propertyr.mortgage);
+
+
+        printf("\n\nThe property has been successfully registered.\nPress the key to return to the user menu :");
+        getch();
+        fflush(stdin);
+        fclose(houser);
+        system("cls");
+        if (admin == 2)
+            menuuser(2);
+        else
+            menuuser(1);
+        }
+    if (a == '2')
+    {
+        fflush(stdin);
+        system("cls");
+        FILE *officer;
+        officer = fopen("Office-Rent.txt","a");
+        if (officer == NULL)
+        {
+            printf("Error opening file!\n");
+            if (admin == 2)
+                menuuser(2);
+            else
+                menuuser(1);
+        }
+
+
+    struct infor
+    {
+        int area;
+        char address[150];
+        char type[50];
+        int old;
+        int meterage;
+        int floor;
+        int total_meterage;
+        char phone[12];
+        int oroom;
+        char amount[12];
+        char mortgage[12];
+    };
+
+    struct infor officerr;
+
+    printf("\n-Municipal area (indicating the location of the office in the city): ");
+    scanf("%d", &officerr.area);
+
+    getchar();
+    printf("\n-Address: ");
+    fgets(officerr.address, sizeof(officerr.address), stdin);
+
+    printf("\n-Office type (Official administrative document, or just administrative position): ");
+    fgets(officerr.type, sizeof(officerr.type), stdin);
+
+    printf("\n-Age: ");
+    scanf("%d", &officerr.old);
+
+    printf("\n-The size of the infrastructure: ");
+    scanf("%d", &officerr.meterage);
+
+    printf("\n-Floor: ");
+    scanf("%d", &officerr.floor);
+
+    printf("\n-The size of the main land of the Office: ");
+    scanf("%d", &officerr.total_meterage);
+
+    printf("\n-Contact number of the owner: ");
+    scanf("%s", &officerr.phone);
+
+    printf("\n-Number of Office rooms: ");
+    scanf("%d", &officerr.oroom);
+
+    printf("\n-Office mortgage amount: ");
+    scanf("%s", &officerr.mortgage);
+
+    printf("\n-The amount of monthly Office rent: ");
+    scanf("%s", &officerr.amount);
+
+    printf("\n\n Press the key to register : ");
     getch();
     fflush(stdin);
+
+    fprintf(officer, "1\n%d\n", officerr.area);
+    fprintf(officer, "%s", officerr.address);
+    fprintf(officer, "%s", officerr.type);
+    fprintf(officer , "%d\n%d\n%d\n", officerr.old, officerr.meterage, officerr.floor);
+    fprintf(officer, "%d\n%s\n%d\n%s\n%s\n", officerr.total_meterage, officerr.phone, officerr.oroom, officerr.amount , officerr.mortgage);
+
+
+    printf("\n\nThe Office has been successfully registered.\nPress the key to return to the user menu :");
+    getch();
+    fflush(stdin);
+    fclose(officer);
     system("cls");
     if (admin == 2)
         menuuser(2);
     else
         menuuser(1);
+    }
+    if (a == '3')
+    {
+        fflush(stdin);
+        system("cls");
+        FILE *landr;
+        landr = fopen("Land-Rent.txt","a");
+        if (landr == NULL)
+        {
+            printf("Error opening file!\n");
+            if (admin == 2)
+                menuuser(2);
+            else
+                menuuser(1);
+        }
+
+
+    struct inflr
+    {
+        int area;
+        char address[150];
+        char type[50];
+        int meterage;
+        char phone[12];
+        char amount[12];
+        char mortgage[12];
+    };
+
+    struct inflr landrr;
+
+    printf("\n-Municipal area (indicating the location of the Land in the city): ");
+    scanf("%d", &landrr.area);
+
+    getchar();
+    printf("\n-Address: ");
+    fgets(landrr.address, sizeof(landrr.address), stdin);
+
+    printf("\n-Land type (agricultural or urban): ");
+    fgets(landrr.type, sizeof(landrr.type), stdin);
+
+    printf("\n-Size of land: ");
+    scanf("%d", &landrr.meterage);
+
+    printf("\n-Contact number of the owner: ");
+    scanf("%s", &landrr.phone);
+
+    printf("\n-Lend mortgage amount: ");
+    scanf("%s", &landrr.mortgage);
+
+    printf("\n-The amount of monthly Lend rent: ");
+    scanf("%s", &landrr.amount);
+
+    printf("\n\n Press the key to register : ");
+    getch();
+    fflush(stdin);
+
+    fprintf(landr, "1\n%d\n", landrr.area);
+    fprintf(landr, "%s", landrr.address);
+    fprintf(landr, "%s", landrr.type);
+    fprintf(landr , "%d\n",landrr.meterage);
+    fprintf(landr, "%s\n%s\n%s\n", landrr.phone,landrr.amount, landrr.mortgage);
+
+
+    printf("\n\nThe Land has been successfully registered.\nPress the key to return to the user menu :");
+    getch();
+    fflush(stdin);
+    fclose(landr);
+    system("cls");
+    if (admin == 2)
+        menuuser(2);
+    else
+        menuuser(1);
+    }
+    if (a == '4')
+    {
+        fflush(stdin);
+        system("cls");
+        if (admin == 2)
+            menuuser(2);
+        else
+            menuuser(1);
+    }
+    else
+    {
+        fflush(stdin);
+        system("cls");
+        if (admin == 2)
+            Sell(2);
+        else
+            Sell(1);
+    }
 }
 void setting()
 {
