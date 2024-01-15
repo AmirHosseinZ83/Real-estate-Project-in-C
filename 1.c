@@ -38,11 +38,12 @@ void si();
 void menu (void);
 void menuuser();
 void rigester(void);
-void setting(void);
+void setting();
 void reports(void);
 void adminmenu();
 void Sell();
 void Rent();
+void edit();
 
 
 void main (void)
@@ -125,22 +126,196 @@ void su(void)
 
     getchar();
     printf("\n-Name : ");
-x1: gets(people.name);
+    while (1)
+    {
+        if (scanf(" %[^\n]", people.name) != 1)
+        {
+            // Handle invalid input (non-alphabetic characters)
+            printf("Invalid input. Please enter a name using only alphabetical characters: ");
+            while (getchar() != '\n');  // Clear input buffer
+        }
+        else
+        {
+            int isValid = 1;
+
+            // Check if all characters are alphabetic
+            for (size_t i = 0; i < strlen(people.name); ++i)
+            {
+                if (!isalpha(people.name[i]))
+                {
+                    isValid = 0;
+                    break;
+                }
+            }
+
+            if (isValid)
+            {
+                break;
+            }
+            else
+            {
+                printf("Invalid input. Please enter a name using only alphabetical characters: ");
+            }
+        }
+    }
 
     printf("\n-Last Name : ");
-    gets(people.lastname);
+    while (1)
+    {
+        if (scanf(" %[^\n]", people.lastname) != 1)
+        {
+            // Handle invalid input (non-alphabetic characters)
+            printf("Invalid input. Please enter a Last name using only alphabetical characters: ");
+            while (getchar() != '\n');  // Clear input buffer
+        }
+        else
+        {
+            int isValid = 1;
+
+            // Check if all characters are alphabetic
+            for (size_t i = 0; i < strlen(people.lastname); ++i)
+            {
+                if (!isalpha(people.lastname[i]))
+                {
+                    isValid = 0;
+                    break;
+                }
+            }
+
+            if (isValid)
+            {
+                break;
+            }
+            else
+            {
+                printf("Invalid input. Please enter a Last name using only alphabetical characters: ");
+            }
+        }
+    }
     printf("\n-National Code : ");
-    scanf("%s", people.ncode);
+
+    while (1)
+    {
+        if (scanf("%s", people.ncode) != 1)
+        {
+            // Handle invalid input (non-numeric characters)
+            printf("Invalid input. Please enter a numeric 10-digit national code: ");
+            while (getchar() != '\n');  // Clear input buffer
+        }
+        else
+        {
+            int isValid = 1;
+
+            // Check if all characters are digits
+            for (size_t i = 0; i < strlen(people.ncode); ++i)
+            {
+                if (!isdigit(people.ncode[i]))
+                {
+                    isValid = 0;
+                    break;
+                }
+            }
+
+            if (isValid && strlen(people.ncode) == 10)
+            {
+                break;
+            }
+            else
+            {
+                printf("Invalid input. Please enter a numeric 10-digit national code: ");
+            }
+        }
+    }
 
     printf("\n-Mobile Number : ");
-    scanf("%s",people.phone);
+    while (1)
+    {
+        if (scanf("%s", people.phone) != 1)
+        {
+            // Handle invalid input (non-numeric characters)
+            printf("Invalid input. Please enter a numeric 10-digit phone number starting with 09: ");
+            while (getchar() != '\n');  // Clear input buffer
+        }
+        else
+        {
+            int isValid = 1;
+
+            // Check if the entered phone number starts with '09'
+            if (strncmp(people.phone, "09", 2) != 0)
+            {
+                isValid = 0;
+            }
+
+            // Check if all characters are digits
+            for (size_t i = 2; i < strlen(people.phone); ++i)
+            {
+                if (!isdigit(people.phone[i]))
+                {
+                    isValid = 0;
+                    break;
+                }
+            }
+
+            if (isValid && strlen(people.phone) == 11)
+            {
+                break;
+            }
+            else
+            {
+                printf("Invalid input. Please enter a numeric 11-digit phone number starting with 09: ");
+            }
+        }
+    }
+    fflush(stdin);
 
     printf("\n-Email Address : ");
-    scanf("%s", people.email);
+    int  i1 =0 , t = 0 ;
+    while(1)
+    {
+        fflush(stdin);
+        gets(people.email);
+        fflush(stdin);
+        while (people.email[i1] != '\0')
+        {
+            if (people.email [i1] == '@' && (isalpha(people.email[i1-1]) || isdigit(people.email[i1-1])) )//Find @ in Email Format
+            {
+                i1++;
+                break;
+            }
+            i1++ ;
+        }
+        while (people.email[i1] != '\0')
+        {
+            if (people.email[i1] == '.' && isalpha(people.email[i1-1]) && isalpha(people.email[i1+1]))// To Find . in Email Format
+            {
+                t = 1 ;
+                break;
+            }
+            i1++;
+        }
+        if (t == 0)
+        {
+            printf ("The Email format is incorrect. Its correct form is as follows XXX@YY.ZZ . Please enter again :\n");
+        }
+        else if (t == 1)
+        {
+            break;
+        }
+    }
 
-x2:  printf("\n-Password : ");
+x2: printf("\n-Password : ");
     char temp2[50];
     scanf("%s", temp2);
+    if (strlen(temp2) <8 )
+    {
+        printf ("Your password length is less than the limit. \n Please Try Again !");
+        goto x2 ;
+    }
+    if (strcmp(people.username ,temp2) == 0 || strcmp(people.name ,temp2) == 0 || strcmp(people.lastname ,temp2) == 0 || strcmp(people.ncode ,temp2) == 0 || strcmp(people.phone ,temp2) == 0 || strcmp("00000000" ,temp2) == 0 || strcmp("12345678" ,temp2) == 0 || strcmp("11111111" ,temp2) == 0 || strcmp("12341234" ,temp2) == 0)
+    {
+        printf ("Your password is not acceptable. \n Please Try Again !");
+        goto x2 ;
+    }
     printf("\n-Repeat The Password Again: ");
     scanf("%s", temp);
     if(strcmp(temp ,temp2) == 0)
@@ -315,7 +490,7 @@ bck1:   printf("Enter password (%d attempts left): \n" , j);
     if (i == 1 || j == 1)
     {
 
-        printf("\nYour attempts were too many.\n Please press the key to be redirected to the menu \n");
+        printf("\nYour attempts were too many.\n Please press a key to be redirected to the menu \n");
         getch();
         fflush(stdin);
         system("cls");
@@ -400,7 +575,10 @@ void menuuser(int admin)
         case '4':
             fflush(stdin);
             system("cls");
-            setting();
+            if (admin == 2)
+                setting(2);
+            else
+                setting(1);
             break;
         case '5':
             fflush(stdin);
@@ -954,8 +1132,323 @@ void Rent(int admin)
             Sell(1);
     }
 }
-void setting()
+void setting(int admin)
 {
+    fflush(stdin);
+    system("cls");
+    printf ("Setting for %s Account : \n" , current->username);
+    printf ("\nPress button 1 to edit the Name (%s) . "  ,current->name);
+    printf ("\nPress button 2 to edit the Last Name (%s) ." , current->family_name);
+    printf ("\nPress button 3 to edit the National Code (%s) ." , current->ncode);
+    printf ("\nPress button 4 to edit the Phone Number (%s) ." , current->numberphone);
+    printf ("\nPress button 5 to edit the Email (%s) ." , current->email);
+    printf ("\nPress button 6 to edit the Password (%s) ." , current->password);
+    printf ("\n - Press button 0 to return to the Previous Menu\n\n\n>Please Enter Your Choice: ");
+    char temp ,replace[60];
+    temp = getchar();
+    switch (temp)
+    {
+        case '1':
+            fflush(stdin);
+            system("cls");
+            printf ("Current Name : %s \nNew Name : ",current->name);
+            current->name[0]='\0';
+            while (1)
+            {
+                if (scanf(" %[^\n]", replace) != 1)
+                {
+                    // Handle invalid input (non-alphabetic characters)
+                    printf("Invalid input. Please enter a name using only alphabetical characters: ");
+                    while (getchar() != '\n');  // Clear input buffer
+                }
+                else
+                {
+                    int isValid = 1;
+
+                    // Check if all characters are alphabetic
+                    for (size_t i = 0; i < strlen(replace); ++i)
+                    {
+                        if (!isalpha(replace[i]))
+                        {
+                            isValid = 0;
+                            break;
+                        }
+                    }
+
+                    if (isValid)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        printf("Invalid input. Please enter a name using only alphabetical characters: ");
+                    }
+                }
+            }
+            strcpy(current->name, replace );
+            edit(admin);
+            break;
+        case '2':
+            fflush(stdin);
+            system("cls");
+            printf ("Current Last Name : %s \nNew Last Name : ",current->family_name);
+            current->family_name[0]='\0';
+                        while (1)
+            {
+                if (scanf(" %[^\n]", replace) != 1)
+                {
+                    // Handle invalid input (non-alphabetic characters)
+                    printf("Invalid input. Please enter a Last name using only alphabetical characters: ");
+                    while (getchar() != '\n');  // Clear input buffer
+                }
+                else
+                {
+                    int isValid = 1;
+
+                    // Check if all characters are alphabetic
+                    for (size_t i = 0; i < strlen(replace); ++i)
+                    {
+                        if (!isalpha(replace[i]))
+                        {
+                            isValid = 0;
+                            break;
+                        }
+                    }
+
+                    if (isValid)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        printf("Invalid input. Please enter a Last name using only alphabetical characters: ");
+                    }
+                }
+            }
+            strcpy(current->family_name, replace );
+            edit(admin);
+            break;
+        case '3':
+            fflush(stdin);
+            system("cls");
+            printf ("Current National Code : %s \nNew National Code : ",current->ncode);
+            current->ncode[0]='\0';
+            while (1)
+            {
+                if (scanf("%s", replace) != 1)
+                {
+                    // Handle invalid input (non-numeric characters)
+                    printf("Invalid input. Please enter a numeric 10-digit national code: ");
+                    while (getchar() != '\n');  // Clear input buffer
+                }
+                else
+                {
+                    int isValid = 1;
+
+                    // Check if all characters are digits
+                    for (size_t i = 0; i < strlen(replace); ++i)
+                    {
+                        if (!isdigit(replace[i]))
+                        {
+                            isValid = 0;
+                            break;
+                        }
+                    }
+
+                    if (isValid && strlen(replace) == 10)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        printf("Invalid input. Please enter a numeric 10-digit national code: ");
+                    }
+                }
+            }
+            strcpy(current->ncode, replace );
+            edit(admin);
+            break;
+        case '4':
+            fflush(stdin);
+            system("cls");
+            printf ("Current Phone Number : %s \nNew Phone Number : ",current->numberphone);
+            current->numberphone[0]='\0';
+            while (1)
+            {
+                if (scanf("%s", replace) != 1)
+                {
+                    // Handle invalid input (non-numeric characters)
+                    printf("Invalid input. Please enter a numeric 10-digit phone number starting with 09: ");
+                    while (getchar() != '\n');  // Clear input buffer
+                }
+                else
+                {
+                    int isValid = 1;
+
+                    // Check if the entered phone number starts with '09'
+                    if (strncmp(replace, "09", 2) != 0)
+                    {
+                        isValid = 0;
+                    }
+
+                    // Check if all characters are digits
+                    for (size_t i = 2; i < strlen(replace); ++i)
+                    {
+                        if (!isdigit(replace[i]))
+                        {
+                            isValid = 0;
+                            break;
+                        }
+                    }
+
+                    if (isValid && strlen(replace) == 11)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        printf("Invalid input. Please enter a numeric 11-digit phone number starting with 09: ");
+                    }
+                }
+            }
+            fflush(stdin);
+            strcpy(current->numberphone, replace );
+            edit(admin);
+            break;
+        case '5':
+            fflush(stdin);
+            system("cls");
+            printf ("Current Email : %s \nNew Email : ",current->email);
+            current->email[0]='\0';
+            fflush(stdin);
+            int  i1 =0 , t = 0 ;
+            while(1)
+            {
+                fflush(stdin);
+                gets(replace);
+                fflush(stdin);
+                while (replace[i1] != '\0')
+                {
+                    if (replace [i1] == '@' && (isalpha(replace[i1-1]) || isdigit(replace[i1-1])) )//Find @ in Email Format
+                    {
+                        i1++;
+                        break;
+                    }
+                    i1++ ;
+                }
+                while (replace[i1] != '\0')
+                {
+                    if (replace[i1] == '.' && isalpha(replace[i1-1]) && isalpha(replace[i1+1]))// To Find . in Email Format
+                    {
+                        t = 1 ;
+                        break;
+                    }
+                    i1++;
+                }
+                if (t == 0)
+                {
+                    printf ("The Email format is incorrect. Its correct form is as follows XXX@YY.ZZ . Please enter again :\n");
+                }
+                else if (t == 1)
+                {
+                    break;
+                }
+            }
+            strcpy(current->email, replace );
+            edit(admin);
+            break;
+        case '6':
+            fflush(stdin);
+            system("cls");
+            char inp[50];
+            printf ("Current Password : %s",current->password);
+e1:         printf(" \nNew Password : ");
+            scanf("%s", replace);
+            if (strlen(replace) <8 )
+            {
+                printf ("Your password length is less than the limit. \n Please Try Again !");
+                goto e1 ;
+            }
+            if (strcmp(current->username ,replace) == 0 || strcmp(current->name ,replace) == 0 || strcmp(current->family_name ,replace) == 0 || strcmp(current->ncode ,replace) == 0 || strcmp(current->numberphone ,replace) == 0 || strcmp("00000000" ,replace) == 0 || strcmp("12345678" ,replace) == 0 || strcmp("11111111" ,replace) == 0 || strcmp("12341234" ,replace) == 0)
+            {
+                printf ("Your password is not acceptable. \n Please Try Again !");
+                goto e1 ;
+            }
+            printf("\n-Repeat The Password Again: ");
+            scanf("%s",inp);
+            if(strcmp(inp ,replace) != 0)
+            {
+                printf("\nPasswords are not the Same !\n");
+                goto e1;
+            }
+            else
+            {
+                current->password[0]='\0';
+                strcpy(current->password, replace );
+                edit(admin);
+                break;
+            }
+        case '0':
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+            {
+                menuuser(2);
+            }
+            else
+            {
+                menuuser(1);
+            }
+            break;
+        default :
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+                setting(2);
+            else
+                setting(1);
+            break;
+
+    }
+}
+void edit(int admin)
+{
+    FILE *f;
+    f = fopen("Informations of Users.txt","w");
+    char user[50] ;
+    strcpy(user ,current->username );
+    current = head;
+    while(current!=NULL)
+    {
+        fprintf(f,"%s\n",current->username);
+        fprintf(f,"%s\n",current->name);
+        fprintf(f,"%s\n",current->family_name);
+        fprintf(f,"%s\n",current->ncode);
+        fprintf(f,"%s\n",current->numberphone);
+        fprintf(f,"%s\n",current->email);
+        fprintf(f,"%s\n",current->password);
+        getchar();
+
+        current = current->next ;
+    }
+    fclose (f);
+    printf("The Edit Was Successful !\n Press a key to return to the User account settings.");
+    getchar();
+    fflush(stdin);
+    system("cls");
+    current = head;
+    while(1)
+    {
+        if (strcmp(current->username, user) == 0 )
+        {
+            if (admin == 2)
+                setting(2);
+            else
+                setting(1);
+            break;
+        }
+            current = current->next;
+    }
 
 }
 void reports()
