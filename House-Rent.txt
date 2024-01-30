@@ -2,7 +2,7 @@
 2
 Qazvin - Saadi - Resalat - num 34
 apartment
-40
+14
 90
 2
 110
@@ -10,3 +10,4 @@ apartment
 2
 200
 15000
+@mohammad
