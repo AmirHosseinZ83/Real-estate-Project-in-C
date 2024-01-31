@@ -151,6 +151,8 @@ void Sell();
 void Rent();
 void edit();
 void adminreports(void);
+void settingmelk();
+
 
 
 void main (void)
@@ -673,6 +675,10 @@ void menuuser(int admin)
         case '2':
             fflush(stdin);
             system("cls");
+            if (admin == 2)
+                settingmelk(2);
+            else
+                settingmelk(1);
             break;
         case '3':
             fflush(stdin);
@@ -714,7 +720,7 @@ void Sell(int admin)
         fflush(stdin);
         system("cls");
         FILE *houses;
-        houses = fopen("House-Sale.txt","a");
+        houses = fopen("House-Sell.txt","a");
         if (houses == NULL)
         {
             printf("Error opening file!\n");
@@ -1528,21 +1534,29 @@ void edit(int admin)
     char user[50] ;
     strcpy(user ,current->username );
     current = head;
+    int cont = 0 ;
     while(current!=NULL)
     {
-        fprintf(f,"%s\n",current->username);
+        if(cont==0)
+        {
+            fprintf(f,"%s\n",current->username);
+            cont++;
+        }
+        else
+        {
+           fprintf(f,"\n%s\n",current->username);
+        }
         fprintf(f,"%s\n",current->name);
         fprintf(f,"%s\n",current->family_name);
         fprintf(f,"%s\n",current->ncode);
         fprintf(f,"%s\n",current->numberphone);
         fprintf(f,"%s\n",current->email);
-        fprintf(f,"%s\n",current->password);
-        getchar();
+        fprintf(f,"%s",current->password);
 
         current = current->next ;
     }
     fclose (f);
-    printf("The Edit Was Successful !\n Press a key to return to the User account settings.");
+    printf("\n\nThe Edit Was Successful !\n Press a key to return to the User account settings.");
     getchar();
     fflush(stdin);
     system("cls");
@@ -1569,7 +1583,7 @@ void reports()
     housesell *p = NULL, *q = NULL;
     FILE *fp;
 
-    fp = fopen("House-Sale.txt", "r");
+    fp = fopen("House-Sell.txt", "r");
 
     if (fp == NULL)
     {
@@ -3148,75 +3162,1734 @@ void reports()
 }
 void adminreports()
 {
-    fflush(stdin);
-    system("cls");
-    char temp ;
-    temp = getchar();
-    printf(" 1 - The number of properties in the archives\n 2 - List of properties available in a specific municipal area\n 3 - List of properties with specific building age\n 4 - List of properties with specific infrastructure size\n 5 - List of all residential properties with specific number of bedrooms\n 6 - List of properties with a certain price\n 7 - List of rental properties with specific limits for mortgage and rent\n8 - List of all apartments available in a particular floor\n");
-    printf(" 9 - The total value of properties registered in the system for sale\n10 - The list of system users who have registered properties in the system\n11 - The list of properties registered in the system in a certain period\n12 - List of properties removed in a specific time period\n13 - The list of system users and the date of the last activity of each user\n14 - Return To The Previous Menu\n\n\n>Please Enter Your Choice: ");
-
-    FILE *file;
-    char line[100];
-
-    file = fopen("Informations of Users.txt", "r");
+   char counter[6] = {0};
 
 
-    while (fgets(line, sizeof(line), file) != NULL)
+    housesell *p = NULL, *q = NULL;
+    FILE *fp;
+
+    fp = fopen("House-Sell.txt", "r");
+
+    if (fp == NULL)
     {
-        line[strcspn(line, "\n")] = 0;
+        printf("Error opening the file.\n");
+        exit(1);
+    }
 
-        struct user *newPerson = createPerson(line, "", "", "", "", "", "");
+    char line[256]; // Assuming a maximum line length of 255 characters
 
-        if (head == NULL) {
-            head = newPerson;
-            current = head;
-        } else {
-            current->next = newPerson;
-            current = current->next;
+    while (fgets(line, sizeof(line), fp) != NULL)
+    {
+        housesell *d = malloc(sizeof(housesell));
+
+        sscanf(line, "%d", &d->active);
+        fgets(line, sizeof(line), fp); // Read the area line
+        sscanf(line, "%d", &d->area);
+        fgets(line, sizeof(line), fp); // Read the address line
+        sscanf(line, "%[^\n]", d->address);
+        fgets(line, sizeof(line), fp); // Read the type line
+        sscanf(line, "%s", d->type);
+        fgets(line, sizeof(line), fp); // Read the old line
+        sscanf(line, "%d", &d->old);
+        fgets(line, sizeof(line), fp); // Read the meterage line
+        sscanf(line, "%d", &d->meterage);
+        fgets(line, sizeof(line), fp); // Read the floor line
+        sscanf(line, "%d", &d->floor);
+        fgets(line, sizeof(line), fp); // Read the total_meterage line
+        sscanf(line, "%d", &d->total_meterage);
+        fgets(line, sizeof(line), fp); // Read the phone line
+        sscanf(line, "%s", d->phone);
+        fgets(line, sizeof(line), fp); // Read the bedroom line
+        sscanf(line, "%d", &d->bedroom);
+        fgets(line, sizeof(line), fp); // Read the cost line
+        sscanf(line, "%d", &d->cost);
+        fgets(line, sizeof(line), fp); // Read the cost line
+        sscanf(line, "%s", &d->writer);
+
+
+        d->hsnext = NULL;
+
+        if (p == NULL)
+        {
+            p = d;
+            q = p;
+        }
+        else
+        {
+            q->hsnext = d;
+            q = d;
+        }
+    }
+
+    fclose(fp);
+
+    housesell *d = p;
+    int temp =0;
+    while (d != NULL)
+    {
+        temp++;
+        if (d->active == 1)
+        {
+            counter[0] ++;
         }
 
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->name, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->family_name, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->ncode, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->numberphone, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->email, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->password, line);
+        d = d->hsnext;
     }
-    fclose(file);
 
-    switch(temp)
+
+
+    officesell *pos = NULL, *qos = NULL;
+    FILE *fpos;
+
+    fpos = fopen("Office-Sell.txt", "r");
+
+    if (fpos == NULL) {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char lineos[256]; // Assuming a maximum line length of 255 characters
+    while (fgets(lineos, sizeof(lineos), fpos) != NULL)
     {
+        officesell *dos = malloc(sizeof(officesell));
+
+        sscanf(lineos, "%d", &dos->active);
+        fgets(lineos, sizeof(lineos), fpos); // Read the area line
+        sscanf(lineos, "%d", &dos->area);
+        fgets(lineos, sizeof(lineos), fpos); // Read the address line
+        sscanf(lineos, "%[^\n]", dos->address);
+        fgets(lineos, sizeof(lineos), fpos); // Read the type line
+        sscanf(lineos, "%[^\n]", dos->type);
+        fgets(lineos, sizeof(lineos), fpos); // Read the old line
+        sscanf(lineos, "%d", &dos->old);
+        fgets(line, sizeof(lineos), fpos); // Read the meterage line
+        sscanf(line, "%d", &dos->meterage);
+        fgets(lineos, sizeof(lineos), fpos); // Read the floor line
+        sscanf(lineos, "%d", &dos->floor);
+        fgets(lineos, sizeof(lineos), fpos); // Read the total_meterage line
+        sscanf(lineos, "%d", &dos->total_meterage);
+        fgets(lineos, sizeof(lineos), fpos); // Read the phone line
+        sscanf(lineos, "%s", dos->phone);
+        fgets(lineos, sizeof(lineos), fpos); // Read the bedroom line
+        sscanf(lineos, "%d", &dos->officeroom);
+        fgets(lineos, sizeof(lineos), fpos); // Read the cost line
+        sscanf(lineos, "%d", &dos->cost);
+        fgets(lineos, sizeof(lineos), fpos); // Read the cost line
+        sscanf(lineos, "%s", &dos->writer);
+
+
+        dos->osnext = NULL;
+
+        if (pos == NULL)
+        {
+            pos = dos;
+            qos = pos;
+        }
+        else
+        {
+            qos->osnext = dos;
+            qos = dos;
+        }
+    }
+
+    fclose(fpos);
+
+    officesell *dos = pos;
+    temp =0;
+    while (dos != NULL)
+    {
+        temp++;
+        if (dos->active == 1)
+        {
+            counter[1] ++;
+        }
+
+        dos = dos->osnext;
+    }
 
 
 
 
 
+    landsell *pls = NULL, *qls = NULL;
+    FILE *fpls;
+
+    fpls = fopen("Land-Sell.txt", "r");
+
+    if (fpls == NULL)
+    {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char linels[256]; // Assuming a maximum line length of 255 characters
+
+    while (fgets(linels, sizeof(line), fpls) != NULL)
+    {
+        landsell *dls = malloc(sizeof(landsell));
+
+        sscanf(linels, "%d", &dls->active);
+        fgets(linels, sizeof(linels), fpls); // Read the area line
+        sscanf(linels, "%d", &dls->area);
+        fgets(linels, sizeof(linels), fpls); // Read the address line
+        sscanf(linels, "%[^\n]", dls->address);
+        fgets(linels, sizeof(linels), fpls); // Read the type line
+        sscanf(linels, "%s", dls->type);
+        fgets(linels, sizeof(linels), fpls); // Read the meterage line
+        sscanf(linels, "%d", &dls->meterage);
+        fgets(linels, sizeof(linels), fpls); // Read the phone line
+        sscanf(linels, "%s", dls->phone);
+        fgets(linels, sizeof(linels), fpls); // Read the cost line
+        sscanf(linels, "%d", &dls->cost);
+        fgets(linels, sizeof(linels), fpls); // Read the Writer
+        sscanf(linels, "%s", &dls->writer);
+
+
+        dls->lsnext = NULL;
+
+        if (pls == NULL)
+        {
+            pls = dls;
+            qls = pls;
+        }
+        else
+        {
+            qls->lsnext = dls;
+            qls = dls;
+        }
+    }
+
+    fclose(fpls);
+
+    landsell *dls = pls;
+    temp =0;
+    while (dls != NULL)
+    {
+        temp++;
+        if (dls->active == 1)
+        {
+            counter[2] ++;
+        }
+
+        dls = dls->lsnext;
+    }
 
 
 
-        case '0':
+
+    houserent *phr = NULL, *qhr = NULL;
+    FILE *fphr;
+
+    fphr = fopen("House-Rent.txt", "r");
+
+    if (fphr == NULL)
+    {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char linehr[256]; // Assuming a maximum line length of 255 characters
+
+    while (fgets(linehr, sizeof(linehr), fphr) != NULL)
+    {
+        houserent *dhr = malloc(sizeof(houserent));
+
+        sscanf(linehr, "%d", &dhr->active);
+        fgets(linehr, sizeof(linehr), fphr); // Read the area line
+        sscanf(linehr, "%d", &dhr->area);
+        fgets(linehr, sizeof(linehr), fphr); // Read the address line
+        sscanf(linehr, "%[^\n]", dhr->address);
+        fgets(linehr, sizeof(linehr), fphr); // Read the type line
+        sscanf(linehr, "%s", dhr->type);
+        fgets(linehr, sizeof(linehr), fphr); // Read the old line
+        sscanf(linehr, "%d", &dhr->floor);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->meterage);
+        fgets(linehr, sizeof(linehr), fphr); // Read the old line
+        sscanf(linehr, "%d", &dhr->old);
+        fgets(linehr, sizeof(linehr), fphr); // Read the floor line
+        sscanf(linehr, "%d", &dhr->total_meterage);
+        fgets(linehr, sizeof(linehr), fphr); // Read the phone line
+        sscanf(linehr, "%s", dhr->phone);
+        fgets(linehr, sizeof(linehr), fphr); // Read the bedroom line
+        sscanf(linehr, "%d", &dhr->bedroom);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->amount);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->mortgage);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%s", &dhr->writer);
+
+
+        dhr->hrnext = NULL;
+
+        if (phr == NULL)
+        {
+            phr = dhr;
+            qhr = phr;
+        }
+        else
+        {
+            qhr->hrnext = dhr;
+            qhr = dhr;
+        }
+    }
+
+    fclose(fphr);
+    houserent *dhr = phr;
+    temp =0;
+    while (dhr != NULL)
+    {
+        temp++;
+        if (dhr->active == 1)
+        {
+            counter[3] ++;
+        }
+
+        dhr = dhr->hrnext;
+
+    }
+
+
+
+
+    officerent *por = NULL, *qor = NULL;
+    FILE *fpor;
+
+    fpor = fopen("Office-Rent.txt", "r");
+
+    if (fpor == NULL)
+    {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char lineor[256]; // Assuming a maximum line length of 255 characters
+
+
+    while (fgets(lineor, sizeof(lineor), fpor) != NULL)
+    {
+        officerent *dor = malloc(sizeof(officerent));
+
+        sscanf(lineor, "%d", &dor->active);
+        fgets(lineor, sizeof(lineor), fpor); // Read the area line
+        sscanf(lineor, "%d", &dor->area);
+        fgets(lineor, sizeof(lineor), fpor); // Read the address line
+        sscanf(lineor, "%[^\n]", dor->address);
+        fgets(lineor, sizeof(lineor), fpor); // Read the type line
+        sscanf(lineor, "%[^\n]", dor->type);
+        fgets(lineor, sizeof(lineor), fpor); // Read the old line
+        sscanf(lineor, "%d", &dor->old);
+        fgets(lineor, sizeof(lineor), fpor); // Read the total_meterage line
+        sscanf(lineor, "%d", &dor->meterage);
+        fgets(lineor, sizeof(lineor), fpor); // Read the meterage line
+        sscanf(lineor, "%d", &dor->floor);
+        fgets(lineor, sizeof(lineor), fpor); // Read the total_meterage line
+        sscanf(lineor, "%d", &dor->total_meterage);
+        fgets(lineor, sizeof(lineor), fp); // Read the phone line
+        sscanf(lineor, "%s", dor->phone);
+        fgets(lineor, sizeof(lineor), fpor); // Read the bedroom line
+        sscanf(lineor, "%d", &dor->officeroom);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->amount);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->mortgage);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%s", &dor->writer);
+
+
+        dor->ornext = NULL;
+
+        if (por == NULL)
+        {
+            por = dor;
+            qor = por;
+        }
+        else
+        {
+            qor->ornext = dor;
+            qor = dor;
+        }
+    }
+
+    fclose(fpor);
+    officerent *dor = por;
+    temp =0;
+    while (dor != NULL)
+    {
+        temp++;
+        if (dor->active == 1)
+        {
+            counter[4] ++;
+        }
+
+        dor = dor->ornext;
+
+    }
+
+    landrent *plr = NULL, *qlr = NULL;
+    FILE *fplr;
+
+    fplr = fopen("Land-Rent.txt", "r");
+
+    if (fplr == NULL)
+    {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char linelr[256]; // Assuming a maximum line length of 255 characters
+
+    while (fgets(linelr, sizeof(linelr), fplr) != NULL)
+    {
+        landrent *dlr = malloc(sizeof(landrent));
+
+        sscanf(linelr, "%d", &dlr->active);
+        fgets(linelr, sizeof(linelr), fplr); // Read the area line
+        sscanf(linelr, "%d", &dlr->area);
+        fgets(linelr, sizeof(linelr), fplr); // Read the address line
+        sscanf(linelr, "%[^\n]", dlr->address);
+        fgets(linelr, sizeof(linelr), fplr); // Read the type line
+        sscanf(linelr, "%s", dlr->type);
+        fgets(linelr, sizeof(linelr), fplr); // Read the meterage line
+        sscanf(linelr, "%d", &dlr->meterage);
+        fgets(linelr, sizeof(linelr), fplr); // Read the phone line
+        sscanf(linelr, "%s", dlr->phone);
+        fgets(linelr, sizeof(linelr), fplr); // Read the bedroom line
+        sscanf(linelr, "%d", &dlr->amount);
+        fgets(linelr, sizeof(linelr), fplr); // Read the cost line
+        sscanf(linelr, "%d", &dlr->mortgage);
+        fgets(linelr, sizeof(linelr), fplr); // Read the cost line
+        sscanf(linelr, "%s", &dlr->writer);
+
+
+        dlr->lrnext = NULL;
+
+        if (plr == NULL)
+        {
+            plr = dlr;
+            qlr = plr;
+        }
+        else
+        {
+            qlr->lrnext = dlr;
+            qlr = dlr;
+        }
+    }
+
+    fclose(fplr);
+
+    landrent *dlr = plr;
+    temp =0;
+    while (dlr != NULL)
+    {
+        temp++;
+        if (dlr->active == 1)
+        {
+            counter[5] ++;
+        }
+
+        dlr = dlr->lrnext;
+    }
+
+    fflush(stdin);
+    system("cls");
+    printf("1 - The number of properties in the archives\n\n2 - List of properties available in a specific municipal area\n\n3 - List of properties with specific building age\n\n4 - List of properties with specific infrastructure size\n\n5 - List of all residential properties with specific number of bedrooms\n\n6 - List of properties with a certain price\n\n7 - List of rental properties with specific limits for mortgage and rent\n\n8 - List of all apartments available in a particular floor\n\n");
+    printf("9 - The total value of properties registered in the system for sale\n\n10 - The list of system users who have registered properties in the system\n\n11 - The list of properties registered in the system in a certain period\n\n12 - List of properties removed in a specific time period\n\n13 - The list of system users and the date of the last activity of each user\n\n0 - Return To The Previous Menu\n\n\n>Please Enter Your Choice: ");
+    char inputrr[5];
+    gets(inputrr);
+    int a = atoi(inputrr);
+    int min , max ,tmp , min1 , max1;
+    int totalvalue = 0 , totalvaluel = 0 , totalvalueo  = 0 ,  totalvalueh = 0 ;
+    switch(a)
+    {
+        case 1:
             fflush(stdin);
             system("cls");
-            menuuser(2);
+            printf ("Number of Houses for Sale : %d  \n",counter[0]);
+            printf ("Number of Offices for Sale : %d  \n",counter[1]);
+            printf ("Number of Lands for Sale : %d  \n",counter[2]);
+            printf ("Number of houses for Rent : %d  \n",counter[3]);
+            printf ("Number of Offices for Rent : %d  \n",counter[4]);
+            printf ("Number of Lands for Rent : %d  \n",counter[5]);
+            printf("\nPress a key for back to menu \n");
+            getch();
+            fflush(stdin);
+            system("cls");
+            adminreports();
             break;
-        default :
+
+        case 2:
+            fflush(stdin);
+            system("cls");
+            printf ("Which municipal area do you want? Please enter it (area 1 to 5) : \n\n");
+            int temp2;
+            scanf("%d",&temp2);
+
+            fflush(stdin);
+            system("cls");
+
+            printf("All Property in Municipal area %d: \n\n\n",temp2);
+
+            int c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Houses for sale in municipal area %d: \n",temp2);
+
+            d = p;
+            while (d != NULL)
+            {
+                if (d->active == 1 && d->area == temp2)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("address : %s\n", d->address);
+                    printf("type : %s\n", d->type);
+                    printf("old : %d\n", d->old);
+                    printf("meterage : %d\n", d->meterage);
+                    printf("floor : %d\n", d->floor);
+                    printf("total meterage : %d\n", d->total_meterage);
+                    printf("phone : %s\n", d->phone);
+                    printf("bedroom : %d\n", d->bedroom);
+                    printf("cost : %d Rial\n", d->cost);
+                }
+                d = d->hsnext;
+            }
+            if (c == 0)
+            {
+                printf("\nNo houses were found for sale in this municipal area!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\nOffices for sale in municipal area %d: \n",temp2);
+            dos = pos;
+            while (dos != NULL)
+            {
+                if (dos->active == 1 && dos->area == temp2)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("address : %s\n", dos->address);
+                    printf("type : %s\n", dos->type);
+                    printf("old : %d\n", dos->old);
+                    printf("meterage : %d\n", dos->meterage);
+                    printf("floor : %d\n", dos->floor);
+                    printf("total meterage : %d\n", dos->total_meterage);
+                    printf("phone : %s\n", dos->phone);
+                    printf("office room : %d\n", dos->officeroom);
+                    printf("cost : %d Rial\n%d\n", dos->cost);
+
+                }
+                dos = dos->osnext;
+            }
+            if (c == 0)
+            {
+                printf("\nNo offices were found for sale in this municipal area!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\nLands for sale in municipal area %d: \n",temp2);
+            dls = pls;
+            while (dls != NULL)
+            {
+                if (dls->active == 1 && dls->area == temp2)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("address : %s\n", dls->address);
+                    printf("type : %s\n", dls->type);
+                    printf("meterage : %d\n", dls->meterage);
+                    printf("phone : %s\n", dls->phone);
+                    printf("cost : %d Rial\n", dls->cost);
+                }
+                dls = dls->lsnext;
+            }
+
+            if (c == 0)
+            {
+                printf("\nNo land was found for sale in this municipal area!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\nHouses for Rent in municipal area %d: \n",temp2);
+            dhr = phr;
+            while (dhr != NULL)
+            {
+                if (dhr->active == 1 && dhr->area == temp2)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("address : %s\n", dhr->address);
+                    printf("type : %s\n", dhr->type);
+                    printf("old : %d\n", dhr->old);
+                    printf("meterage : %d\n", dhr->meterage);
+                    printf("floor : %d\n", dhr->floor);
+                    printf("total meterage : %d\n", dhr->total_meterage);
+                    printf("phone : %s\n", dhr->phone);
+                    printf("bedroom : %d\n", dhr->bedroom);
+                    printf("monthly rent : %d Rial\n", dhr->amount);
+                    printf("mortgage : %d Rial\n", dhr->mortgage);
+                }
+                dhr = dhr->hrnext;
+            }
+
+            if (c == 0)
+            {
+                printf("\nNo Houses were found for rent in this municipal area!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\nOffice for Rent in municipal area %d: \n",temp2);
+            dor = por;
+            while (dor != NULL)
+            {
+                if (dor->active == 1 && dor->area == temp2)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("address : %s\n", dor->address);
+                    printf("type : %s\n", dor->type);
+                    printf("old : %d\n", dor->old);
+                    printf("meterage : %d\n", dor->meterage);
+                    printf("floor : %d\n", dor->floor);
+                    printf("total meterage : %d\n", dor->total_meterage);
+                    printf("phone : %s\n", dor->phone);
+                    printf("office room : %d\n", dor->officeroom);
+                    printf("monthly rent : %d Rial\n", dor->amount);
+                    printf("mortgage : %d Rial\n", dor->mortgage);
+                }
+                dor = dor->ornext;
+            }
+            if (c == 0)
+            {
+                printf("\nNo offices were found for rent in this municipal area!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\nLand for Rent in municipal area %d: \n",temp2);
+            dlr = plr;
+            while (dlr != NULL)
+            {
+                if (dlr->active == 1 && dlr->area == temp2)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("address : %s\n", dlr->address);
+                    printf("type : %s\n", dlr->type);
+                    printf("meterage : %d\n", dlr->meterage);
+                    printf("phone : %s\n", dlr->phone);
+                    printf("monthly rent : %d Rial\n", dlr->amount);
+                    printf("mortgage : %d Rial\n", dlr->mortgage);
+                }
+                dlr = dlr->lrnext;
+            }
+
+            if (c == 0)
+            {
+                printf("\nNo land was found for rent in this municipal area!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf("\nPress a key for back to menu \n");
+            getch();
+            fflush(stdin);
+            system("cls");
+            adminreports();
+
+
+        case 3:
+            system("cls");
+            printf(" - List of properties with specific building age :\n\n");
+            printf ("Enter a range :\n");
+            scanf("%d",&min);
+            printf ("to \n");
+            scanf("%d",&max);
+            if (min>max)
+            {
+                tmp = max ;
+                max = min ;
+                min = tmp ;
+            }
+
+            fflush(stdin);
+            system("cls");
+
+            printf("All Property with %d to %d old: \n\n\n",min , max);
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Houses for sale : \n");
+            d = p;
+            while (d != NULL)
+            {
+                if (d->active == 1 && d->old <= max && d->old >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", d->area);
+                    printf("address : %s\n", d->address);
+                    printf("type : %s\n", d->type);
+                    printf("old : %d\n", d->old);
+                    printf("meterage : %d\n", d->meterage);
+                    printf("floor : %d\n", d->floor);
+                    printf("total meterage : %d\n", d->total_meterage);
+                    printf("phone : %s\n", d->phone);
+                    printf("bedroom : %d\n", d->bedroom);
+                    printf("cost : %d Rial\n", d->cost);
+                }
+                d = d->hsnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo houses were found for sale in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffices for sale : \n");
+            dos = pos;
+            while (dos != NULL)
+            {
+                if (dos->active == 1 && dos->old <= max && dos->old >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dos->area);
+                    printf("address : %s\n", dos->address);
+                    printf("type : %s\n", dos->type);
+                    printf("old : %d\n", dos->old);
+                    printf("meterage : %d\n", dos->meterage);
+                    printf("floor : %d\n", dos->floor);
+                    printf("total meterage : %d\n", dos->total_meterage);
+                    printf("phone : %s\n", dos->phone);
+                    printf("office room : %d\n", dos->officeroom);
+                    printf("cost : %d Rial\n", dos->cost);
+                }
+                dos = dos->osnext;
+            }
+            if (c == 0)
+            {
+                printf("\nNo offices were found for sale in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nHouses for Rent : \n");
+            dhr = phr;
+            while (dhr != NULL)
+            {
+                if (dhr->active == 1 && dhr->old <= max && dhr->old >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dhr->area);
+                    printf("address : %s\n", dhr->address);
+                    printf("type : %s\n", dhr->type);
+                    printf("old : %d\n", dhr->old);
+                    printf("meterage : %d\n", dhr->meterage);
+                    printf("floor : %d\n", dhr->floor);
+                    printf("total meterage : %d\n", dhr->total_meterage);
+                    printf("phone : %s\n", dhr->phone);
+                    printf("bedroom : %d\n", dhr->bedroom);
+                    printf("monthly rent : %d Rial\n", dhr->amount);
+                    printf("mortgage : %d Rial\n", dhr->mortgage);
+                }
+                dhr = dhr->hrnext;
+            }
+
+            if (c == 0)
+            {
+                printf("\n\nNo Houses were found for rent in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffice for Rent : \n");
+            dor = por;
+            while (dor != NULL)
+            {
+                if (dor->active == 1 && dor->old <= max && dor->old >= min)
+                {
+            printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dor->area);
+                    printf("address : %s\n", dor->address);
+                    printf("type : %s\n", dor->type);
+                    printf("old : %d\n", dor->old);
+                    printf("meterage : %d\n", dor->meterage);
+                    printf("floor : %d\n", dor->floor);
+                    printf("total meterage : %d\n", dor->total_meterage);
+                    printf("phone : %s\n", dor->phone);
+                    printf("office room : %d\n", dor->officeroom);
+                    printf("monthly rent : %d Rial\n", dor->amount);
+                    printf("mortgage : %d Rial\n", dor->mortgage);
+                }
+                dor = dor->ornext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo offices were found for rent in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf("\nPress a key for back to menu \n");
+            getch();
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
+        case 4:
+            system("cls");
+            printf(" - List of properties with specific meterage :\n\n");
+            printf ("Enter a range :\n");
+            scanf("%d",&min);
+            printf ("to \n");
+            scanf("%d",&max);
+            if (min>max)
+            {
+                tmp = max ;
+                max = min ;
+                min = tmp ;
+            }
+
+            fflush(stdin);
+            system("cls");
+
+            printf("All Property with %d to %d meterage: \n\n\n",min , max);
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Houses for sale : \n");
+            d = p;
+            while (d != NULL)
+            {
+                if (d->active == 1 && d->meterage <= max && d->meterage >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", d->area);
+                    printf("address : %s\n", d->address);
+                    printf("type : %s\n", d->type);
+                    printf("old : %d\n", d->old);
+                    printf("meterage : %d\n", d->meterage);
+                    printf("floor : %d\n", d->floor);
+                    printf("total meterage : %d\n", d->total_meterage);
+                    printf("phone : %s\n", d->phone);
+                    printf("bedroom : %d\n", d->bedroom);
+                    printf("cost : %d Rial\n", d->cost);
+                }
+                d = d->hsnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo houses were found for sale in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffices for sale : \n");
+            dos = pos;
+            while (dos != NULL)
+            {
+                if (dos->active == 1 && dos->meterage <= max && dos->meterage >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dos->area);
+                    printf("address : %s\n", dos->address);
+                    printf("type : %s\n", dos->type);
+                    printf("old : %d\n", dos->old);
+                    printf("meterage : %d\n", dos->meterage);
+                    printf("floor : %d\n", dos->floor);
+                    printf("total meterage : %d\n", dos->total_meterage);
+                    printf("phone : %s\n", dos->phone);
+                    printf("office room : %d\n", dos->officeroom);
+                    printf("cost : %d Rial\n", dos->cost);
+                }
+                dos = dos->osnext;
+            }
+            if (c == 0)
+            {
+                printf("\nNo offices were found for sale in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Lands for sale : \n");
+            dls = pls;
+            while (dls != NULL)
+            {
+                if (dls->active == 1 && dls->meterage <= max && dls->meterage >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dls->area);
+                    printf("address : %s\n", dls->address);
+                    printf("type : %s\n", dls->type);
+                    printf("meterage : %d\n", dls->meterage);
+                    printf("phone : %s\n", dls->phone);
+                    printf("cost : %d Rial\n", dls->cost);
+                }
+                dls = dls->lsnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo Lands were found for sale in this Renge!\n\n");
+            }
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nHouses for Rent : \n");
+            dhr = phr;
+            while (dhr != NULL)
+            {
+                if (dhr->active == 1 && dhr->meterage <= max && dhr->meterage >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dhr->area);
+                    printf("address : %s\n", dhr->address);
+                    printf("type : %s\n", dhr->type);
+                    printf("old : %d\n", dhr->old);
+                    printf("meterage : %d\n", dhr->meterage);
+                    printf("floor : %d\n", dhr->floor);
+                    printf("total meterage : %d\n", dhr->total_meterage);
+                    printf("phone : %s\n", dhr->phone);
+                    printf("bedroom : %d\n", dhr->bedroom);
+                    printf("monthly rent : %d Rial\n", dhr->amount);
+                    printf("mortgage : %d Rial\n", dhr->mortgage);
+                }
+                dhr = dhr->hrnext;
+            }
+
+            if (c == 0)
+            {
+                printf("\n\nNo Houses were found for rent in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffice for Rent : \n");
+            dor = por;
+            while (dor != NULL)
+            {
+                if (dor->active == 1 && dor->meterage <= max && dor->meterage >= min)
+                {
+            printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dor->area);
+                    printf("address : %s\n", dor->address);
+                    printf("type : %s\n", dor->type);
+                    printf("old : %d\n", dor->old);
+                    printf("meterage : %d\n", dor->meterage);
+                    printf("floor : %d\n", dor->floor);
+                    printf("total meterage : %d\n", dor->total_meterage);
+                    printf("phone : %s\n", dor->phone);
+                    printf("office room : %d\n", dor->officeroom);
+                    printf("monthly rent : %d Rial\n", dor->amount);
+                    printf("mortgage : %d Rial\n", dor->mortgage);
+                }
+                dor = dor->ornext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo offices were found for rent in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Lands for Rent : \n");
+            dlr = plr;
+            while (dlr != NULL)
+            {
+                if (dlr->active == 1 && dlr->meterage <= max && dlr->meterage >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dlr->area);
+                    printf("address : %s\n", dlr->address);
+                    printf("type : %s\n", dlr->type);
+                    printf("meterage : %d\n", dlr->meterage);
+                    printf("phone : %s\n", dlr->phone);
+                    printf("monthly rent : %d Rial\n", dlr->amount);
+                    printf("mortgage : %d Rial\n", dlr->mortgage);
+                }
+                dlr = dlr->lrnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo Lands were found for sale in this Renge!\n\n");
+            }
+
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf("\nPress a key for back to menu \n");
+            getch();
+
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
+
+        case 5:
+
+            system("cls");
+            printf(" - List of properties with specific number of Room (bedroom and office room) :\n\n");
+            printf ("Enter a range :\n");
+            scanf("%d",&min);
+            printf ("to \n");
+            scanf("%d",&max);
+            if (min>max)
+            {
+                tmp = max ;
+                max = min ;
+                min = tmp ;
+            }
+
+            fflush(stdin);
+            system("cls");
+
+            printf("All Property with %d  to %d Rooms: \n\n\n",min , max);
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Houses for sale : \n");
+            d = p;
+            while (d != NULL)
+            {
+                if (d->active == 1 && d->bedroom <= max && d->bedroom >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", d->area);
+                    printf("address : %s\n", d->address);
+                    printf("type : %s\n", d->type);
+                    printf("old : %d\n", d->old);
+                    printf("meterage : %d\n", d->meterage);
+                    printf("floor : %d\n", d->floor);
+                    printf("total meterage : %d\n", d->total_meterage);
+                    printf("phone : %s\n", d->phone);
+                    printf("bedroom : %d\n", d->bedroom);
+                    printf("cost : %d Rial\n", d->cost);
+                }
+                d = d->hsnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo houses were found for sale in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffices for sale : \n");
+            dos = pos;
+            while (dos != NULL)
+            {
+                if (dos->active == 1 && dos->officeroom <= max && dos->officeroom >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dos->area);
+                    printf("address : %s\n", dos->address);
+                    printf("type : %s\n", dos->type);
+                    printf("old : %d\n", dos->old);
+                    printf("meterage : %d\n", dos->meterage);
+                    printf("floor : %d\n", dos->floor);
+                    printf("total meterage : %d\n", dos->total_meterage);
+                    printf("phone : %s\n", dos->phone);
+                    printf("office room : %d\n", dos->officeroom);
+                    printf("cost : %d Rial\n", dos->cost);
+                }
+                dos = dos->osnext;
+            }
+            if (c == 0)
+            {
+                printf("\nNo offices were found for sale in this Renge!\n\n");
+            }
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nHouses for Rent : \n");
+            dhr = phr;
+            while (dhr != NULL)
+            {
+                if (dhr->active == 1 && dhr->bedroom <= max && dhr->bedroom >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dhr->area);
+                    printf("address : %s\n", dhr->address);
+                    printf("type : %s\n", dhr->type);
+                    printf("old : %d\n", dhr->old);
+                    printf("meterage : %d\n", dhr->meterage);
+                    printf("floor : %d\n", dhr->floor);
+                    printf("total meterage : %d\n", dhr->total_meterage);
+                    printf("phone : %s\n", dhr->phone);
+                    printf("bedroom : %d\n", dhr->bedroom);
+                    printf("monthly rent : %d Rial\n", dhr->amount);
+                    printf("mortgage : %d Rial\n", dhr->mortgage);
+                }
+                dhr = dhr->hrnext;
+            }
+
+            if (c == 0)
+            {
+                printf("\n\nNo Houses were found for rent in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffice for Rent : \n");
+            dor = por;
+            while (dor != NULL)
+            {
+                if (dor->active == 1 && dor->officeroom <= max && dor->officeroom >= min)
+                {
+            printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dor->area);
+                    printf("address : %s\n", dor->address);
+                    printf("type : %s\n", dor->type);
+                    printf("old : %d\n", dor->old);
+                    printf("meterage : %d\n", dor->meterage);
+                    printf("floor : %d\n", dor->floor);
+                    printf("total meterage : %d\n", dor->total_meterage);
+                    printf("phone : %s\n", dor->phone);
+                    printf("office room : %d\n", dor->officeroom);
+                    printf("monthly rent : %d Rial\n", dor->amount);
+                    printf("mortgage : %d Rial\n", dor->mortgage);
+                }
+                dor = dor->ornext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo offices were found for rent in this Renge!\n\n");
+            }
+
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf("\nPress a key for back to menu \n");
+            getch();
+
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
+
+        case 6:
+            system("cls");
+            printf(" - List of properties with specific cost :\n\n");
+            printf ("Enter a range :\n");
+            scanf("%d",&min);
+            printf ("to \n");
+            scanf("%d",&max);
+            if (min>max)
+            {
+                tmp = max ;
+                max = min ;
+                min = tmp ;
+            }
+
+            fflush(stdin);
+            system("cls");
+
+            printf("All Property with %d Rial to %d Rial cost: \n\n\n",min , max);
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Houses for sale : \n");
+            d = p;
+            while (d != NULL)
+            {
+                if (d->active == 1 && d->cost <= max && d->cost >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", d->area);
+                    printf("address : %s\n", d->address);
+                    printf("type : %s\n", d->type);
+                    printf("old : %d\n", d->old);
+                    printf("meterage : %d\n", d->meterage);
+                    printf("floor : %d\n", d->floor);
+                    printf("total meterage : %d\n", d->total_meterage);
+                    printf("phone : %s\n", d->phone);
+                    printf("bedroom : %d\n", d->bedroom);
+                    printf("cost : %d Rial\n", d->cost);
+                }
+                d = d->hsnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo houses were found for sale in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffices for sale : \n");
+            dos = pos;
+            while (dos != NULL)
+            {
+                if (dos->active == 1 && dos->cost <= max && dos->cost >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dos->area);
+                    printf("address : %s\n", dos->address);
+                    printf("type : %s\n", dos->type);
+                    printf("old : %d\n", dos->old);
+                    printf("meterage : %d\n", dos->meterage);
+                    printf("floor : %d\n", dos->floor);
+                    printf("total meterage : %d\n", dos->total_meterage);
+                    printf("phone : %s\n", dos->phone);
+                    printf("office room : %d\n", dos->officeroom);
+                    printf("cost : %d Rial\n", dos->cost);
+                }
+                dos = dos->osnext;
+            }
+            if (c == 0)
+            {
+                printf("\nNo offices were found for sale in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Lands for sale : \n");
+            dls = pls;
+            while (dls != NULL)
+            {
+                if (dls->active == 1 && dls->cost <= max && dls->cost >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dls->area);
+                    printf("address : %s\n", dls->address);
+                    printf("type : %s\n", dls->type);
+                    printf("meterage : %d\n", dls->meterage);
+                    printf("phone : %s\n", dls->phone);
+                    printf("cost : %d Rial\n", dls->cost);
+                }
+                dls = dls->lsnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo Lands were found for sale in this Renge!\n\n");
+            }
+
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf("\nPress a key for back to menu \n");
+            getch();
+
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
+
+
+
+         case 7:
+            system("cls");
+            printf(" - List of properties with specific Monthly Rent & Mortgage :\n\n");
+            printf ("Enter a range for Monthly Rent :\n");
+            scanf("%d",&min);
+            printf ("to \n");
+            scanf("%d",&max);
+            if (min>max)
+            {
+                tmp = max ;
+                max = min ;
+                min = tmp ;
+            }
+
+
+            printf ("\nEnter a range for Mortgage :\n");
+            scanf("%d",&min1);
+            printf ("to \n");
+            scanf("%d",&max1);
+            if (min1>max1)
+            {
+                tmp = max1 ;
+                max1 = min1 ;
+                min1 = tmp ;
+            }
+
+            fflush(stdin);
+            system("cls");
+
+            printf("All Property with %d Rial to %d Rial Monthly Rent & %d Rial to %d Rial Mortgage: \n\n\n",min , max ,min1 , max1);
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Houses for Rent : \n");
+            dhr = phr;
+            while (dhr != NULL)
+            {
+                if (dhr->active == 1 && dhr->amount <= max && dhr->amount >= min && dhr->mortgage <= max1 && dhr->mortgage >= min1)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dhr->area);
+                    printf("address : %s\n", dhr->address);
+                    printf("type : %s\n", dhr->type);
+                    printf("old : %d\n", dhr->old);
+                    printf("meterage : %d\n", dhr->meterage);
+                    printf("floor : %d\n", dhr->floor);
+                    printf("total meterage : %d\n", dhr->total_meterage);
+                    printf("phone : %s\n", dhr->phone);
+                    printf("bedroom : %d\n", dhr->bedroom);
+                    printf("monthly rent : %d Rial\n", dhr->amount);
+                    printf("mortgage : %d Rial\n", dhr->mortgage);
+                }
+                dhr = dhr->hrnext;
+            }
+
+            if (c == 0)
+            {
+                printf("\n\nNo Houses were found for rent in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffice for Rent : \n");
+            dor = por;
+            while (dor != NULL)
+            {
+                if (dor->active == 1  && dor->amount <= max && dor->amount >= min && dor->mortgage <= max1 && dor->mortgage >= min1)
+                {
+            printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dor->area);
+                    printf("address : %s\n", dor->address);
+                    printf("type : %s\n", dor->type);
+                    printf("old : %d\n", dor->old);
+                    printf("meterage : %d\n", dor->meterage);
+                    printf("floor : %d\n", dor->floor);
+                    printf("total meterage : %d\n", dor->total_meterage);
+                    printf("phone : %s\n", dor->phone);
+                    printf("office room : %d\n", dor->officeroom);
+                    printf("monthly rent : %d Rial\n", dor->amount);
+                    printf("mortgage : %d Rial\n", dor->mortgage);
+                }
+                dor = dor->ornext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo offices were found for rent in this Renge!\n\n");
+            }
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Lands for Rent : \n");
+            dlr = plr;
+            while (dlr != NULL)
+            {
+                if (dlr->active == 1  && dlr->amount <= max && dlr->amount >= min  && dlr->mortgage <= max1 && dlr->mortgage >= min1 )
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dlr->area);
+                    printf("address : %s\n", dlr->address);
+                    printf("type : %s\n", dlr->type);
+                    printf("meterage : %d\n", dlr->meterage);
+                    printf("phone : %s\n", dlr->phone);
+                    printf("monthly rent : %d Rial\n", dlr->amount);
+                    printf("mortgage : %d Rial\n", dlr->mortgage);
+                }
+                dlr = dlr->lrnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo Lands were found for Rent in this Renge!\n\n");
+            }
+
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf("\nPress a key for back to menu \n");
+            getch();
+
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
+
+        case 8:
+
+            system("cls");
+            printf(" - List of properties with specific number of Floor :\n\n");
+            printf ("Enter a range :\n");
+            scanf("%d",&min);
+            printf ("to \n");
+            scanf("%d",&max);
+            if (min>max)
+            {
+                tmp = max ;
+                max = min ;
+                min = tmp ;
+            }
+
+            fflush(stdin);
+            system("cls");
+
+            printf("All Property with %d  to %d Floor: \n\n\n",min , max);
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Houses for sale : \n");
+            d = p;
+            while (d != NULL)
+            {
+                if (d->active == 1 && d->floor <= max && d->floor >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", d->area);
+                    printf("address : %s\n", d->address);
+                    printf("type : %s\n", d->type);
+                    printf("old : %d\n", d->old);
+                    printf("meterage : %d\n", d->meterage);
+                    printf("floor : %d\n", d->floor);
+                    printf("total meterage : %d\n", d->total_meterage);
+                    printf("phone : %s\n", d->phone);
+                    printf("bedroom : %d\n", d->bedroom);
+                    printf("cost : %d Rial\n", d->cost);
+                }
+                d = d->hsnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo houses were found for sale in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffices for sale : \n");
+            dos = pos;
+            while (dos != NULL)
+            {
+                if (dos->active == 1 && dos->floor <= max && dos->floor >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dos->area);
+                    printf("address : %s\n", dos->address);
+                    printf("type : %s\n", dos->type);
+                    printf("old : %d\n", dos->old);
+                    printf("meterage : %d\n", dos->meterage);
+                    printf("floor : %d\n", dos->floor);
+                    printf("total meterage : %d\n", dos->total_meterage);
+                    printf("phone : %s\n", dos->phone);
+                    printf("office room : %d\n", dos->officeroom);
+                    printf("cost : %d Rial\n", dos->cost);
+                }
+                dos = dos->osnext;
+            }
+            if (c == 0)
+            {
+                printf("\nNo offices were found for sale in this Renge!\n\n");
+            }
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nHouses for Rent : \n");
+            dhr = phr;
+            while (dhr != NULL)
+            {
+                if (dhr->active == 1 && dhr->floor <= max && dhr->floor >= min)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dhr->area);
+                    printf("address : %s\n", dhr->address);
+                    printf("type : %s\n", dhr->type);
+                    printf("old : %d\n", dhr->old);
+                    printf("meterage : %d\n", dhr->meterage);
+                    printf("floor : %d\n", dhr->floor);
+                    printf("total meterage : %d\n", dhr->total_meterage);
+                    printf("phone : %s\n", dhr->phone);
+                    printf("bedroom : %d\n", dhr->bedroom);
+                    printf("monthly rent : %d Rial\n", dhr->amount);
+                    printf("mortgage : %d Rial\n", dhr->mortgage);
+                }
+                dhr = dhr->hrnext;
+            }
+
+            if (c == 0)
+            {
+                printf("\n\nNo Houses were found for rent in this Renge!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffice for Rent : \n");
+            dor = por;
+            while (dor != NULL)
+            {
+                if (dor->active == 1 && dor->floor <= max && dor->floor >= min)
+                {
+            printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dor->area);
+                    printf("address : %s\n", dor->address);
+                    printf("type : %s\n", dor->type);
+                    printf("old : %d\n", dor->old);
+                    printf("meterage : %d\n", dor->meterage);
+                    printf("floor : %d\n", dor->floor);
+                    printf("total meterage : %d\n", dor->total_meterage);
+                    printf("phone : %s\n", dor->phone);
+                    printf("office room : %d\n", dor->officeroom);
+                    printf("monthly rent : %d Rial\n", dor->amount);
+                    printf("mortgage : %d Rial\n", dor->mortgage);
+                }
+                dor = dor->ornext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo offices were found for rent in this Renge!\n\n");
+            }
+
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf("\nPress a key for back to menu \n");
+            getch();
+
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
+
+        case 9:
+            system("cls");
+            printf(" - List of Values :\n\n");
+
+
+
+            printf("\n--------------------------------------------------------\n");
+            d = p;
+            while (d != NULL)
+            {
+                if (d->active == 1)
+                {
+
+                    totalvalueh = totalvalueh + d->cost;
+                }
+                d = d->hsnext;
+            }
+
+            printf("\n\nTotal value of houses registered for sale : %d Rial\n\n",totalvalueh);
+
+            printf("\n--------------------------------------------------------\n");
+            dos = pos;
+            while (dos != NULL)
+            {
+                if (dos->active == 1 )
+                {
+
+                    totalvalueo = totalvalueo + dos->cost;
+                }
+                dos = dos->osnext;
+            }
+
+            printf("\n\nTotal value of Offices registered for sale : %d Rial\n\n",totalvalueo);
+
+            printf("\n--------------------------------------------------------\n");
+            dls = pls;
+            while (dls != NULL)
+            {
+                if (dls->active == 1)
+                {
+
+                   totalvaluel = totalvaluel + dls->cost;
+                }
+                dls = dls->lsnext;
+            }
+            printf("\n\nTotal value of Lands registered for sale : %d Rial\n\n",totalvaluel);
+
+
+
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            totalvalue = totalvaluel + totalvalueo + totalvalueh ;
+
+            printf("\n\nValue of all properties registered for sale : %d Rial\n\n",totalvalue);
+
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\nPress a key for back to menu \n");
+            getch();
+
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
+
+
+        case 10:
+            system("cls");
+            current = head;
+            int n =0 ;
+            char maxu[30] , minu[30];
+            int maxv , minv;
+            current = head;
+            n =0 ;
+            strcpy(maxu, current->username);
+            maxv = 0;
+            strcpy(minu, current->username);
+            minv = 100;
+
+            printf(" - List of system users who have registered properties in the system :\n\n");
+            while (current != NULL)
+            {
+                d = p;
+                while (d != NULL)
+                {
+                    if (strcmp(current->username, d->writer) == 0 )
+                    {
+                        n++ ;
+                    }
+                    d = d->hsnext;
+                }
+
+                dos = pos;
+                while (dos != NULL)
+                {
+                    if (strcmp(current->username, dos->writer) == 0 )
+                    {
+                        n++ ;
+                    }
+                    dos = dos->osnext;
+                }
+
+                dls = pls;
+                while (dls != NULL)
+                {
+                    if (strcmp(current->username, dls->writer) == 0 )
+                    {
+                        n++ ;
+                    }
+                    dls = dls->lsnext;
+                }
+
+                dhr = phr;
+                while (dhr != NULL)
+                {
+                    if (strcmp(current->username, dhr->writer) == 0 )
+                    {
+                        n++ ;
+                    }
+                    dhr = dhr->hrnext;
+                }
+
+                dor = por;
+                while (dor != NULL)
+                {
+                    if (strcmp(current->username, dor->writer) == 0 )
+                    {
+                        n++ ;
+                    }
+                    dor = dor->ornext;
+                }
+
+                dlr = plr;
+                while (dlr != NULL)
+                {
+                    if (strcmp(current->username, dlr->writer) == 0 )
+                    {
+                        n++ ;
+                    }
+                    dlr = dlr->lrnext;
+                }
+
+                if (maxv < n)
+                {
+                    maxv=n;
+                    strcpy(maxu, current->username);
+                }
+                else
+                    if (minv > n)
+                    {
+                        minv=n;
+                        strcpy(minu, current->username);
+                    }
+                printf("\n--------------------------------------------------------\n");
+                printf("%s has registered %d properties",current->username , n);
+                current = current->next;
+                n = 0 ;
+            }
+            printf("\n--------------------------------------------------------\n");
+
+            printf("\n%s is the most registered property with %d registered properties.",maxu,maxv);
+            printf("\nThe least registered property is %s with %d registered properties.",minu,minv);
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\nPress a key for back to menu \n");
+            getch();
+
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
+
+
+
+
+            printf("\nPress a key for back to menu \n");
+            getch();
+
             fflush(stdin);
             system("cls");
             adminreports();
@@ -3235,8 +4908,990 @@ void adminreports()
 
 
 
-    }
-    getchar();
-    menuuser(2);
 
+
+        case 0:
+            fflush(stdin);
+            system("cls");
+            menuuser(2);
+            break;
+        default :
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
+
+
+    }
+
+}
+
+
+
+void settingmelk(int admin)
+{
+    fflush(stdin);
+    system("cls");
+    housesell *p = NULL, *q = NULL;
+    FILE *fp;
+
+    fp = fopen("House-Sell.txt", "r");
+
+    if (fp == NULL)
+    {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char line[256]; // Assuming a maximum line length of 255 characters
+
+    while (fgets(line, sizeof(line), fp) != NULL)
+    {
+        housesell *d = malloc(sizeof(housesell));
+
+        sscanf(line, "%d", &d->active);
+        fgets(line, sizeof(line), fp); // Read the area line
+        sscanf(line, "%d", &d->area);
+        fgets(line, sizeof(line), fp); // Read the address line
+        sscanf(line, "%[^\n]", d->address);
+        fgets(line, sizeof(line), fp); // Read the type line
+        sscanf(line, "%s", d->type);
+        fgets(line, sizeof(line), fp); // Read the old line
+        sscanf(line, "%d", &d->old);
+        fgets(line, sizeof(line), fp); // Read the meterage line
+        sscanf(line, "%d", &d->meterage);
+        fgets(line, sizeof(line), fp); // Read the floor line
+        sscanf(line, "%d", &d->floor);
+        fgets(line, sizeof(line), fp); // Read the total_meterage line
+        sscanf(line, "%d", &d->total_meterage);
+        fgets(line, sizeof(line), fp); // Read the phone line
+        sscanf(line, "%s", d->phone);
+        fgets(line, sizeof(line), fp); // Read the bedroom line
+        sscanf(line, "%d", &d->bedroom);
+        fgets(line, sizeof(line), fp); // Read the cost line
+        sscanf(line, "%d", &d->cost);
+        fgets(line, sizeof(line), fp); // Read the cost line
+        sscanf(line, "%s", &d->writer);
+
+
+        d->hsnext = NULL;
+
+        if (p == NULL)
+        {
+            p = d;
+            q = p;
+        }
+        else
+        {
+            q->hsnext = d;
+            q = d;
+        }
+    }
+
+    fclose(fp);
+
+    housesell *d = p;
+
+
+    officesell *pos = NULL, *qos = NULL;
+    FILE *fpos;
+
+    fpos = fopen("Office-Sell.txt", "r");
+
+    if (fpos == NULL) {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char lineos[256]; // Assuming a maximum line length of 255 characters
+    while (fgets(lineos, sizeof(lineos), fpos) != NULL)
+    {
+        officesell *dos = malloc(sizeof(officesell));
+
+        sscanf(lineos, "%d", &dos->active);
+        fgets(lineos, sizeof(lineos), fpos); // Read the area line
+        sscanf(lineos, "%d", &dos->area);
+        fgets(lineos, sizeof(lineos), fpos); // Read the address line
+        sscanf(lineos, "%[^\n]", dos->address);
+        fgets(lineos, sizeof(lineos), fpos); // Read the type line
+        sscanf(lineos, "%[^\n]", dos->type);
+        fgets(lineos, sizeof(lineos), fpos); // Read the old line
+        sscanf(lineos, "%d", &dos->old);
+        fgets(line, sizeof(lineos), fpos); // Read the meterage line
+        sscanf(line, "%d", &dos->meterage);
+        fgets(lineos, sizeof(lineos), fpos); // Read the floor line
+        sscanf(lineos, "%d", &dos->floor);
+        fgets(lineos, sizeof(lineos), fpos); // Read the total_meterage line
+        sscanf(lineos, "%d", &dos->total_meterage);
+        fgets(lineos, sizeof(lineos), fpos); // Read the phone line
+        sscanf(lineos, "%s", dos->phone);
+        fgets(lineos, sizeof(lineos), fpos); // Read the bedroom line
+        sscanf(lineos, "%d", &dos->officeroom);
+        fgets(lineos, sizeof(lineos), fpos); // Read the cost line
+        sscanf(lineos, "%d", &dos->cost);
+        fgets(lineos, sizeof(lineos), fpos); // Read the cost line
+        sscanf(lineos, "%s", &dos->writer);
+
+
+        dos->osnext = NULL;
+
+        if (pos == NULL)
+        {
+            pos = dos;
+            qos = pos;
+        }
+        else
+        {
+            qos->osnext = dos;
+            qos = dos;
+        }
+    }
+
+    fclose(fpos);
+
+    officesell *dos = pos;
+
+
+
+
+
+    landsell *pls = NULL, *qls = NULL;
+    FILE *fpls;
+
+    fpls = fopen("Land-Sell.txt", "r");
+
+    if (fpls == NULL)
+    {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char linels[256]; // Assuming a maximum line length of 255 characters
+
+    while (fgets(linels, sizeof(line), fpls) != NULL)
+    {
+        landsell *dls = malloc(sizeof(landsell));
+
+        sscanf(linels, "%d", &dls->active);
+        fgets(linels, sizeof(linels), fpls); // Read the area line
+        sscanf(linels, "%d", &dls->area);
+        fgets(linels, sizeof(linels), fpls); // Read the address line
+        sscanf(linels, "%[^\n]", dls->address);
+        fgets(linels, sizeof(linels), fpls); // Read the type line
+        sscanf(linels, "%s", dls->type);
+        fgets(linels, sizeof(linels), fpls); // Read the meterage line
+        sscanf(linels, "%d", &dls->meterage);
+        fgets(linels, sizeof(linels), fpls); // Read the phone line
+        sscanf(linels, "%s", dls->phone);
+        fgets(linels, sizeof(linels), fpls); // Read the cost line
+        sscanf(linels, "%d", &dls->cost);
+        fgets(linels, sizeof(linels), fpls); // Read the Writer
+        sscanf(linels, "%s", &dls->writer);
+
+
+        dls->lsnext = NULL;
+
+        if (pls == NULL)
+        {
+            pls = dls;
+            qls = pls;
+        }
+        else
+        {
+            qls->lsnext = dls;
+            qls = dls;
+        }
+    }
+
+    fclose(fpls);
+
+    landsell *dls = pls;
+
+
+
+
+
+    houserent *phr = NULL, *qhr = NULL;
+    FILE *fphr;
+
+    fphr = fopen("House-Rent.txt", "r");
+
+    if (fphr == NULL)
+    {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char linehr[256]; // Assuming a maximum line length of 255 characters
+
+    while (fgets(linehr, sizeof(linehr), fphr) != NULL)
+    {
+        houserent *dhr = malloc(sizeof(houserent));
+
+        sscanf(linehr, "%d", &dhr->active);
+        fgets(linehr, sizeof(linehr), fphr); // Read the area line
+        sscanf(linehr, "%d", &dhr->area);
+        fgets(linehr, sizeof(linehr), fphr); // Read the address line
+        sscanf(linehr, "%[^\n]", dhr->address);
+        fgets(linehr, sizeof(linehr), fphr); // Read the type line
+        sscanf(linehr, "%s", dhr->type);
+        fgets(linehr, sizeof(linehr), fphr); // Read the old line
+        sscanf(linehr, "%d", &dhr->floor);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->meterage);
+        fgets(linehr, sizeof(linehr), fphr); // Read the old line
+        sscanf(linehr, "%d", &dhr->old);
+        fgets(linehr, sizeof(linehr), fphr); // Read the floor line
+        sscanf(linehr, "%d", &dhr->total_meterage);
+        fgets(linehr, sizeof(linehr), fphr); // Read the phone line
+        sscanf(linehr, "%s", dhr->phone);
+        fgets(linehr, sizeof(linehr), fphr); // Read the bedroom line
+        sscanf(linehr, "%d", &dhr->bedroom);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->amount);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->mortgage);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%s", &dhr->writer);
+
+
+        dhr->hrnext = NULL;
+
+        if (phr == NULL)
+        {
+            phr = dhr;
+            qhr = phr;
+        }
+        else
+        {
+            qhr->hrnext = dhr;
+            qhr = dhr;
+        }
+    }
+
+    fclose(fphr);
+    houserent *dhr = phr;
+
+
+
+
+
+    officerent *por = NULL, *qor = NULL;
+    FILE *fpor;
+
+    fpor = fopen("Office-Rent.txt", "r");
+
+    if (fpor == NULL)
+    {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char lineor[256]; // Assuming a maximum line length of 255 characters
+
+
+    while (fgets(lineor, sizeof(lineor), fpor) != NULL)
+    {
+        officerent *dor = malloc(sizeof(officerent));
+
+        sscanf(lineor, "%d", &dor->active);
+        fgets(lineor, sizeof(lineor), fpor); // Read the area line
+        sscanf(lineor, "%d", &dor->area);
+        fgets(lineor, sizeof(lineor), fpor); // Read the address line
+        sscanf(lineor, "%[^\n]", dor->address);
+        fgets(lineor, sizeof(lineor), fpor); // Read the type line
+        sscanf(lineor, "%[^\n]", dor->type);
+        fgets(lineor, sizeof(lineor), fpor); // Read the old line
+        sscanf(lineor, "%d", &dor->old);
+        fgets(lineor, sizeof(lineor), fpor); // Read the total_meterage line
+        sscanf(lineor, "%d", &dor->meterage);
+        fgets(lineor, sizeof(lineor), fpor); // Read the meterage line
+        sscanf(lineor, "%d", &dor->floor);
+        fgets(lineor, sizeof(lineor), fpor); // Read the total_meterage line
+        sscanf(lineor, "%d", &dor->total_meterage);
+        fgets(lineor, sizeof(lineor), fp); // Read the phone line
+        sscanf(lineor, "%s", dor->phone);
+        fgets(lineor, sizeof(lineor), fpor); // Read the bedroom line
+        sscanf(lineor, "%d", &dor->officeroom);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->amount);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->mortgage);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%s", &dor->writer);
+
+
+        dor->ornext = NULL;
+
+        if (por == NULL)
+        {
+            por = dor;
+            qor = por;
+        }
+        else
+        {
+            qor->ornext = dor;
+            qor = dor;
+        }
+    }
+
+    fclose(fpor);
+    officerent *dor = por;
+
+
+    landrent *plr = NULL, *qlr = NULL;
+    FILE *fplr;
+
+    fplr = fopen("Land-Rent.txt", "r");
+
+    if (fplr == NULL)
+    {
+        printf("Error opening the file.\n");
+        exit(1);
+    }
+
+    char linelr[256]; // Assuming a maximum line length of 255 characters
+
+    while (fgets(linelr, sizeof(linelr), fplr) != NULL)
+    {
+        landrent *dlr = malloc(sizeof(landrent));
+
+        sscanf(linelr, "%d", &dlr->active);
+        fgets(linelr, sizeof(linelr), fplr); // Read the area line
+        sscanf(linelr, "%d", &dlr->area);
+        fgets(linelr, sizeof(linelr), fplr); // Read the address line
+        sscanf(linelr, "%[^\n]", dlr->address);
+        fgets(linelr, sizeof(linelr), fplr); // Read the type line
+        sscanf(linelr, "%s", dlr->type);
+        fgets(linelr, sizeof(linelr), fplr); // Read the meterage line
+        sscanf(linelr, "%d", &dlr->meterage);
+        fgets(linelr, sizeof(linelr), fplr); // Read the phone line
+        sscanf(linelr, "%s", dlr->phone);
+        fgets(linelr, sizeof(linelr), fplr); // Read the bedroom line
+        sscanf(linelr, "%d", &dlr->amount);
+        fgets(linelr, sizeof(linelr), fplr); // Read the cost line
+        sscanf(linelr, "%d", &dlr->mortgage);
+        fgets(linelr, sizeof(linelr), fplr); // Read the cost line
+        sscanf(linelr, "%s", &dlr->writer);
+
+
+        dlr->lrnext = NULL;
+
+        if (plr == NULL)
+        {
+            plr = dlr;
+            qlr = plr;
+        }
+        else
+        {
+            qlr->lrnext = dlr;
+            qlr = dlr;
+        }
+    }
+
+    fclose(fplr);
+
+    landrent *dlr = plr;
+
+    fflush(stdin);
+    printf (" 1 - House - Sell : \n\n");
+    printf (" 2 - Office - Sell : \n\n");
+    printf (" 3 - Land - Sell : \n\n");
+    printf (" 4 - House - Rent : \n\n");
+    printf (" 5 - House - Rent : \n\n");
+    printf (" 6 - House - Rent : \n\n");
+    printf ("\n - Press button 0 to return to the Previous Menu\n\n\n>Please Enter Your Choice: ");
+    char temp ;
+    int c = 0 ;
+    int inputrr;
+
+
+    temp = getchar();
+    switch (temp)
+    {
+        case '1':
+            fflush(stdin);
+            system("cls");
+            printf (" 1 - House - Sell : \n\n");
+            c = 0 ;
+            d = p;
+            while (d != NULL)
+            {
+                if(d->active == 1)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", d->area);
+                    printf("address : %s\n", d->address);
+                    printf("type : %s\n", d->type);
+                    printf("old : %d\n", d->old);
+                    printf("meterage : %d\n", d->meterage);
+                    printf("floor : %d\n", d->floor);
+                    printf("total meterage : %d\n", d->total_meterage);
+                    printf("phone : %s\n", d->phone);
+                    printf("bedroom : %d\n", d->bedroom);
+                    printf("cost : %d Rial\n", d->cost);
+                }
+                d = d->hsnext;
+            }
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf ("\nNow Select The Property You Want To Delete (Enter Its Number)(If you enter '0' you will be return to menu) :");
+            scanf("%d", &inputrr);
+            if (inputrr == 0 )
+            {
+                if (admin == 2)
+                    settingmelk(2);
+                else
+                    settingmelk(1);
+            }
+            d = p;
+            c = 0 ;
+            while (d != NULL)
+            {
+                c++ ;
+                if (c == inputrr)
+                {
+                    d->active = 0;
+                    break;
+                }
+
+                d = d->hsnext;
+            }
+            fflush(stdin);
+            FILE *f;
+            f = fopen("House-Sell.txt","w");
+            d = p;
+            int cont = 0 ;
+            while(d!=NULL)
+            {
+                if(cont==0)
+                {
+                    fprintf(f,"%d\n",d->active);
+                    cont++;
+                }
+                else
+                {
+                   fprintf(f,"\n%d\n",d->active);
+                }
+                fprintf(f,"%d\n",d->area);
+                fprintf(f,"%s\n",d->address);
+                fprintf(f,"%s\n",d->type);
+                fprintf(f,"%d\n",d->old);
+                fprintf(f,"%d\n",d->meterage);
+                fprintf(f,"%d\n",d->floor);
+                fprintf(f,"%d\n",d->total_meterage);
+                fprintf(f,"%s\n",d->phone);
+                fprintf(f,"%d\n",d->bedroom);
+                fprintf(f,"%d\n",d->cost);
+                fprintf(f,"%s",d->writer);
+
+                d = d->hsnext ;
+            }
+            fclose (f);
+
+            system("cls");
+            printf("\n\nThe property was successfully removed !\n\nPress a key to return to the User account settings.");
+            getchar();
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+                settingmelk(2);
+            else
+                settingmelk(1);
+            break;
+        case '2':
+
+            fflush(stdin);
+            system("cls");
+            printf (" 1 - Office - Sell : \n\n");
+            dos = pos;
+            c = 0 ;
+            while (dos != NULL )
+            {
+                if( dos->active == 1 )
+                {
+
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dos->area);
+                    printf("address : %s\n", dos->address);
+                    printf("type : %s\n", dos->type);
+                    printf("old : %d\n", dos->old);
+                    printf("meterage : %d\n", dos->meterage);
+                    printf("floor : %d\n", dos->floor);
+                    printf("total meterage : %d\n", dos->total_meterage);
+                    printf("phone : %s\n", dos->phone);
+                    printf("office room : %d\n", dos->officeroom);
+                    printf("cost : %d Rial\n", dos->cost);
+                }
+                dos = dos->osnext;
+            }
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf ("\nNow Select The Property You Want To Delete (Enter Its Number)(If you enter '0' you will be return to menu) :");
+            scanf("%d", &inputrr);
+            if (inputrr == 0 )
+            {
+                if (admin == 2)
+                    settingmelk(2);
+                else
+                    settingmelk(1);
+            }
+            dos = pos;
+            c = 0 ;
+
+            while (dos != NULL)
+            {
+                c++ ;
+                if (c == inputrr)
+                {
+                    dos->active = 0;
+                    break;
+                }
+
+                dos = dos->osnext;
+            }
+            fflush(stdin);
+            FILE *fos;
+            fos = fopen("Office-Sell.txt","w");
+            dos = pos;
+            cont = 0 ;
+            while(dos!=NULL)
+            {
+                if(cont==0)
+                {
+                    fprintf(fos,"%d\n",dos->active);
+                    cont++;
+                }
+                else
+                {
+                   fprintf(fos,"\n%d\n",dos->active);
+                }
+                fprintf(fos,"%d\n",dos->area);
+                fprintf(fos,"%s\n",dos->address);
+                fprintf(fos,"%s\n",dos->type);
+                fprintf(fos,"%d\n",dos->old);
+                fprintf(fos,"%d\n",dos->meterage);
+                fprintf(fos,"%d\n",dos->floor);
+                fprintf(fos,"%d\n",dos->total_meterage);
+                fprintf(fos,"%s\n",dos->phone);
+                fprintf(fos,"%d\n",dos->officeroom);
+                fprintf(fos,"%d\n",dos->cost);
+                fprintf(fos,"%s",dos->writer);
+
+                dos = dos->osnext ;
+            }
+            fclose (fos);
+
+            system("cls");
+
+            printf("\n\nThe property was successfully removed !\n\nPress a key to return to the User account settings.");
+            getchar();
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+                settingmelk(2);
+            else
+                settingmelk(1);
+            break;
+        case '3':
+
+            fflush(stdin);
+            system("cls");
+            printf (" 1 - Land - Sell : \n\n");
+            dls = pls;
+            c = 0 ;
+            while (dls != NULL )
+            {
+                if( dls->active == 1 )
+                {
+
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dls->area);
+                    printf("address : %s\n", dls->address);
+                    printf("type : %s\n", dls->type);
+                    printf("meterage : %d\n", dls->meterage);
+                    printf("phone : %s\n", dls->phone);
+                    printf("cost : %d Rial\n", dls->cost);
+                }
+                dls = dls->lsnext;
+            }
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf ("\nNow Select The Property You Want To Delete (Enter Its Number)(If you enter '0' you will be return to menu) :");
+            scanf("%d", &inputrr);
+            if (inputrr == 0 )
+            {
+                if (admin == 2)
+                    settingmelk(2);
+                else
+                    settingmelk(1);
+            }
+            dls = pls;
+            c = 0 ;
+
+            while (dls != NULL)
+            {
+                c++ ;
+                if (c == inputrr)
+                {
+                    dls->active = 0;
+                    break;
+                }
+
+                dls = dls->lsnext;
+            }
+            fflush(stdin);
+            FILE *fls;
+            fls = fopen("Land-Sell.txt","w");
+            dls = pls;
+            cont = 0 ;
+            while(dls!=NULL)
+            {
+                if(cont==0)
+                {
+                    fprintf(fls,"%d\n",dls->active);
+                    cont++;
+                }
+                else
+                {
+                   fprintf(fls,"\n%d\n",dls->active);
+                }
+                fprintf(fls,"%d\n",dls->area);
+                fprintf(fls,"%s\n",dls->address);
+                fprintf(fls,"%s\n",dls->type);
+                fprintf(fls,"%d\n",dls->meterage);
+                fprintf(fls,"%s\n",dls->phone);
+                fprintf(fls,"%d\n",dls->cost);
+                fprintf(fls,"%s",dls->writer);
+
+                dls = dls->lsnext ;
+            }
+            fclose (fls);
+
+            system("cls");
+
+            printf("\n\nThe property was successfully removed !\n\nPress a key to return to the User account settings.");
+            getchar();
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+                settingmelk(2);
+            else
+                settingmelk(1);
+            break;
+        case '4':
+            fflush(stdin);
+            system("cls");
+            printf (" 1 - House - Rent : \n\n");
+            c = 0 ;
+            dhr = phr;
+            while (dhr != NULL)
+            {
+                if(dhr->active == 1)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dhr->area);
+                    printf("address : %s\n", dhr->address);
+                    printf("type : %s\n", dhr->type);
+                    printf("old : %d\n", dhr->old);
+                    printf("meterage : %d\n", dhr->meterage);
+                    printf("floor : %d\n", dhr->floor);
+                    printf("total meterage : %d\n", dhr->total_meterage);
+                    printf("phone : %s\n", dhr->phone);
+                    printf("bedroom : %d\n", dhr->bedroom);
+                    printf("amount : %d Rial\n", dhr->amount);
+                    printf("mortgage : %d Rial\n", dhr->mortgage);
+
+                }
+                dhr = dhr->hrnext;
+            }
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf ("\nNow Select The Property You Want To Delete (Enter Its Number)(If you enter '0' you will be return to menu) :");
+            scanf("%d", &inputrr);
+            if (inputrr == 0 )
+            {
+                if (admin == 2)
+                    settingmelk(2);
+                else
+                    settingmelk(1);
+            }
+            dhr = phr;
+            c = 0 ;
+            while (dhr != NULL)
+            {
+                c++ ;
+                if (c == inputrr)
+                {
+                    dhr->active = 0;
+                    break;
+                }
+
+                dhr = dhr->hrnext;
+            }
+            fflush(stdin);
+            FILE *fhr;
+            fhr = fopen("House-Rent.txt","w");
+            dhr = phr;
+            cont = 0 ;
+            while(dhr!=NULL)
+            {
+                if(cont==0)
+                {
+                    fprintf(fhr,"%d\n",dhr->active);
+                    cont++;
+                }
+                else
+                {
+                   fprintf(fhr,"\n%d\n",dhr->active);
+                }
+                fprintf(fhr,"%d\n",dhr->area);
+                fprintf(fhr,"%s\n",dhr->address);
+                fprintf(fhr,"%s\n",dhr->type);
+                fprintf(fhr,"%d\n",dhr->old);
+                fprintf(fhr,"%d\n",dhr->meterage);
+                fprintf(fhr,"%d\n",dhr->floor);
+                fprintf(fhr,"%d\n",dhr->total_meterage);
+                fprintf(fhr,"%s\n",dhr->phone);
+                fprintf(fhr,"%d\n",dhr->bedroom);
+                fprintf(fhr,"%d\n",dhr->amount);
+                fprintf(fhr,"%d\n",dhr->mortgage);
+                fprintf(fhr,"%s",dhr->writer);
+
+                dhr = dhr->hrnext ;
+            }
+            fclose (fhr);
+
+            system("cls");
+            printf("\n\nThe property was successfully removed !\n\nPress a key to return to the User account settings.");
+            getchar();
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+                settingmelk(2);
+            else
+                settingmelk(1);
+            break;
+        case '5':
+            fflush(stdin);
+            system("cls");
+            printf (" 1 - Office - Rent : \n\n");
+            dor = por;
+            c = 0 ;
+            while (dor != NULL )
+            {
+                if( dor->active == 1 )
+                {
+
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dor->area);
+                    printf("address : %s\n", dor->address);
+                    printf("type : %s\n", dor->type);
+                    printf("old : %d\n", dor->old);
+                    printf("meterage : %d\n", dor->meterage);
+                    printf("floor : %d\n", dor->floor);
+                    printf("total meterage : %d\n", dor->total_meterage);
+                    printf("phone : %s\n", dor->phone);
+                    printf("office room : %d\n", dor->officeroom);
+                    printf("amount : %d Rial\n", dor->amount);
+                    printf("mortgage : %d Rial\n", dor->mortgage);
+                }
+                dor = dor->ornext;
+            }
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf ("\nNow Select The Property You Want To Delete (Enter Its Number)(If you enter '0' you will be return to menu) :");
+            scanf("%d", &inputrr);
+            if (inputrr == 0 )
+            {
+                if (admin == 2)
+                    settingmelk(2);
+                else
+                    settingmelk(1);
+            }
+            dor = por;
+            c = 0 ;
+
+            while (dor != NULL)
+            {
+                c++ ;
+                if (c == inputrr)
+                {
+                    dor->active = 0;
+                    break;
+                }
+
+                dor = dor->ornext;
+            }
+            fflush(stdin);
+            FILE *fosf;
+            fosf = fopen("Office-Rent.txt","w");
+            dor = por;
+            cont = 0 ;
+            while(dor!=NULL)
+            {
+                if(cont==0)
+                {
+                    fprintf(fosf,"%d\n",dor->active);
+                    cont++;
+                }
+                else
+                {
+                   fprintf(fosf,"\n%d\n",dor->active);
+                }
+                fprintf(fosf,"%d\n",dor->area);
+                fprintf(fosf,"%s\n",dor->address);
+                fprintf(fosf,"%s\n",dor->type);
+                fprintf(fosf,"%d\n",dor->old);
+                fprintf(fosf,"%d\n",dor->meterage);
+                fprintf(fosf,"%d\n",dor->floor);
+                fprintf(fosf,"%d\n",dor->total_meterage);
+                fprintf(fosf,"%s\n",dor->phone);
+                fprintf(fosf,"%d\n",dor->officeroom);
+                fprintf(fosf,"%d\n",dor->amount);
+                fprintf(fosf,"%d\n",dor->mortgage);
+                fprintf(fosf,"%s",dor->writer);
+
+                dor = dor->ornext ;
+            }
+            fclose (fosf);
+
+            system("cls");
+
+            printf("\n\nThe property was successfully removed !\n\nPress a key to return to the User account settings.");
+            getchar();
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+                settingmelk(2);
+            else
+                settingmelk(1);
+            break;
+        case '6':
+            fflush(stdin);
+            system("cls");
+            printf (" - Land - Rent : \n\n");
+            dlr = plr;
+            c = 0 ;
+            while (dlr != NULL )
+            {
+                if( dlr->active == 1 )
+                {
+
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dlr->area);
+                    printf("address : %s\n", dlr->address);
+                    printf("type : %s\n", dlr->type);
+                    printf("meterage : %d\n", dlr->meterage);
+                    printf("phone : %s\n", dlr->phone);
+                    printf("amount : %d Rial\n", dlr->amount);
+                    printf("mortgage : %d Rial\n", dlr->mortgage);
+                }
+                dlr = dlr->lrnext;
+            }
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf ("\nNow Select The Property You Want To Delete (Enter Its Number)(If you enter '0' you will be return to menu) :");
+            scanf("%d", &inputrr);
+            if (inputrr == 0 )
+            {
+                if (admin == 2)
+                    settingmelk(2);
+                else
+                    settingmelk(1);
+            }
+            dlr = plr;
+            c = 0 ;
+
+            while (dlr != NULL)
+            {
+                c++ ;
+                if (c == inputrr)
+                {
+                    dlr->active = 0;
+                    break;
+                }
+
+                dlr = dlr->lrnext;
+            }
+            fflush(stdin);
+            FILE *flr;
+            flr = fopen("Land-Rent.txt","w");
+            dlr = plr;
+            cont = 0 ;
+            while(dlr!=NULL)
+            {
+                if(cont==0)
+                {
+                    fprintf(flr,"%d\n",dlr->active);
+                    cont++;
+                }
+                else
+                {
+                   fprintf(flr,"\n%d\n",dlr->active);
+                }
+                fprintf(flr,"%d\n",dlr->area);
+                fprintf(flr,"%s\n",dlr->address);
+                fprintf(flr,"%s\n",dlr->type);
+                fprintf(flr,"%d\n",dlr->meterage);
+                fprintf(flr,"%s\n",dlr->phone);
+                fprintf(flr,"%d\n",dlr->amount);
+                fprintf(flr,"%d\n",dlr->mortgage);
+                fprintf(flr,"%s",dlr->writer);
+
+                dlr = dlr->lrnext ;
+            }
+            fclose (flr);
+
+            system("cls");
+
+            printf("\n\nThe property was successfully removed !\n\nPress a key to return to the User account settings.");
+            getchar();
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+                settingmelk(2);
+            else
+                settingmelk(1);
+            break;
+        case '0':
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+            {
+                menuuser(2);
+            }
+            else
+            {
+                menuuser(1);
+            }
+            break;
+        default :
+            fflush(stdin);
+            system("cls");
+            if (admin == 2)
+                setting(2);
+            else
+                setting(1);
+            break;
+
+    }
 }
