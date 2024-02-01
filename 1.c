@@ -3287,6 +3287,54 @@ void reports()
 
 
     }
+
+    d = p ;
+    while (p != NULL)
+    {
+    housesell *temp = p;
+    p = p->hsnext;
+    free(temp);
+    }
+
+    dos = pos ;
+    while (pos != NULL)
+    {
+    officesell *temp = pos;
+    pos = pos->osnext;
+    free(temp);
+    }
+
+    dls = pls ;
+    while (pls != NULL)
+    {
+    landsell *temp = pls;
+    pls = pls->lsnext;
+    free(temp);
+    }
+
+    dhr = phr ;
+    while (phr != NULL)
+    {
+    houserent *temp = phr;
+    phr = phr->hrnext;
+    free(temp);
+    }
+
+    dor = por ;
+    while (por != NULL)
+    {
+    officerent *temp = por;
+    por = por->ornext;
+    free(temp);
+    }
+
+    dlr = plr ;
+    while (plr != NULL)
+    {
+    landrent *temp = plr;
+    plr = plr->lrnext;
+    free(temp);
+    }
     getchar();
     menuuser(1);
 
@@ -6336,35 +6384,55 @@ void adminreports()
             adminreports();
             break;
 
-        case 14 :
-            fflush(stdin);
-            system("cls");
-            dhr = phr;
-            while (dhr != NULL)
-            {
-                    printf("\n--------------------------------------------------------\n");
-                    c++ ;
-                    printf("\n%d-\n\n",c);
-                    printf("active : %d\n", dhr->active);
-                    printf("area : %d\n", dhr->area);
-                    printf("address : %s\n", dhr->address);
-                    printf("type : %s\n", dhr->type);
-                    printf("old : %d\n", dhr->old);
-                    printf("meterage : %d\n", dhr->meterage);
-                    printf("floor : %d\n", dhr->floor);
-                    printf("total meterage : %d\n", dhr->total_meterage);
-                    printf("phone : %s\n", dhr->phone);
-                    printf("bedroom : %d\n", dhr->bedroom);
-                    printf("Date :  %d - %d - %d \n", dhr->year , dhr->month , dhr->day);
-                    printf("monthly rent : %d Rial\n", dhr->amount);
-                    printf("mortgage : %d Rial\n", dhr->mortgage);
-
-                dhr = dhr->hrnext;
-            }
-            getchar();
-            break;
 
         case 0:
+            d = p ;
+            while (p != NULL)
+            {
+            housesell *temp = p;
+            p = p->hsnext;
+            free(temp);
+            }
+
+            dos = pos ;
+            while (pos != NULL)
+            {
+            officesell *temp = pos;
+            pos = pos->osnext;
+            free(temp);
+            }
+
+            dls = pls ;
+            while (pls != NULL)
+            {
+            landsell *temp = pls;
+            pls = pls->lsnext;
+            free(temp);
+            }
+
+            dhr = phr ;
+            while (phr != NULL)
+            {
+            houserent *temp = phr;
+            phr = phr->hrnext;
+            free(temp);
+            }
+
+            dor = por ;
+            while (por != NULL)
+            {
+            officerent *temp = por;
+            por = por->ornext;
+            free(temp);
+            }
+
+            dlr = plr ;
+            while (plr != NULL)
+            {
+            landrent *temp = plr;
+            plr = plr->lrnext;
+            free(temp);
+            }
             fflush(stdin);
             system("cls");
             menuuser(2);
@@ -6377,6 +6445,7 @@ void adminreports()
 
 
     }
+
 
 }
 
@@ -7370,6 +7439,53 @@ void settingmelk(int admin)
                 settingmelk(1);
             break;
         case '0':
+            d = p ;
+            while (p != NULL)
+            {
+            housesell *temp = p;
+            p = p->hsnext;
+            free(temp);
+            }
+
+            dos = pos ;
+            while (pos != NULL)
+            {
+            officesell *temp = pos;
+            pos = pos->osnext;
+            free(temp);
+            }
+
+            dls = pls ;
+            while (pls != NULL)
+            {
+            landsell *temp = pls;
+            pls = pls->lsnext;
+            free(temp);
+            }
+
+            dhr = phr ;
+            while (phr != NULL)
+            {
+            houserent *temp = phr;
+            phr = phr->hrnext;
+            free(temp);
+            }
+
+            dor = por ;
+            while (por != NULL)
+            {
+            officerent *temp = por;
+            por = por->ornext;
+            free(temp);
+            }
+
+            dlr = plr ;
+            while (plr != NULL)
+            {
+            landrent *temp = plr;
+            plr = plr->lrnext;
+            free(temp);
+            }
             fflush(stdin);
             system("cls");
             if (admin == 2)
