@@ -4,6 +4,9 @@ Qazvin - Zereshk
 agricultural
 300
 09192346574
+1402
+10
+15
 1500
 30000
 @AmirAbbass
@@ -13,6 +16,21 @@ hakimie - faz 2
 urban
 400
 09187485692
+1402
+11
+13
 500
 10000
+ali
+1
+2
+qazvin - naser abad
+urban
+200
+09554655654
+1402
+11
+13
+1000
+1020
 ali

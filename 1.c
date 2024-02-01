@@ -47,6 +47,9 @@ struct hs {
     char phone[12];
     int bedroom;
     int cost;
+    int year;
+    int month;
+    int day;
     char writer[50];
     struct hs *hsnext;
 };
@@ -65,6 +68,9 @@ struct os {
     char phone[12];
     int officeroom;
     int cost;
+    int year;
+    int month;
+    int day;
     char writer[50];
     struct os *osnext;
 };
@@ -79,6 +85,9 @@ struct ls {
     int meterage;
     char phone[12];
     int cost;
+    int year;
+    int month;
+    int day;
     char writer[50];
     struct ls *lsnext;
 };
@@ -98,6 +107,9 @@ struct hr {
     int bedroom;
     int amount;
     int mortgage;
+    int year;
+    int month;
+    int day;
     char writer[50];
     struct hr *hrnext;
 };
@@ -117,6 +129,9 @@ struct or {
     int officeroom;
     int amount;
     int mortgage;
+    int year;
+    int month;
+    int day;
     char writer[50];
     struct or *ornext;
 };
@@ -132,6 +147,9 @@ struct lr {
     char phone[12];
     int amount;
     int mortgage;
+    int year;
+    int month;
+    int day;
     char writer[50];
     struct lr *lrnext;
 };
@@ -152,7 +170,7 @@ void Rent();
 void edit();
 void adminreports(void);
 void settingmelk();
-
+int tr = 0 ;
 
 
 void main (void)
@@ -161,6 +179,7 @@ void main (void)
 }
 void menu(void)
 {
+    tr++;
     printf("Hello, Welcome to Amir Hossein Real Estate Program!\n\n");
     printf("1 - Sign UP\n2 - Sign In\n3 - Exit\n\n\n>Please Enter Your Choice: ");
 
@@ -468,52 +487,55 @@ void si()
 {
 
     printf("Sign In function --- (If you want to go to the menu, press 0)\n");
-    FILE *file;
-    char line[100];
-
-    file = fopen("Informations of Users.txt", "r");
-
-
-    while (fgets(line, sizeof(line), file) != NULL)
+    if (tr==1)
     {
-        line[strcspn(line, "\n")] = 0;
 
-        struct user *newPerson = createPerson(line, "", "", "", "", "", "");
+        FILE *file;
+        char line[100];
 
-        if (head == NULL) {
-            head = newPerson;
-            current = head;
-        } else {
-            current->next = newPerson;
-            current = current->next;
+        file = fopen("Informations of Users.txt", "r");
+
+
+        while (fgets(line, sizeof(line), file) != NULL)
+        {
+            line[strcspn(line, "\n")] = 0;
+
+            struct user *newPerson = createPerson(line, "", "", "", "", "", "");
+
+            if (head == NULL) {
+                head = newPerson;
+                current = head;
+            } else {
+                current->next = newPerson;
+                current = current->next;
+            }
+
+            fgets(line, sizeof(line), file);
+            line[strcspn(line, "\n")] = 0;
+            strcpy(current->name, line);
+
+            fgets(line, sizeof(line), file);
+            line[strcspn(line, "\n")] = 0;
+            strcpy(current->family_name, line);
+
+            fgets(line, sizeof(line), file);
+            line[strcspn(line, "\n")] = 0;
+            strcpy(current->ncode, line);
+
+            fgets(line, sizeof(line), file);
+            line[strcspn(line, "\n")] = 0;
+            strcpy(current->numberphone, line);
+
+            fgets(line, sizeof(line), file);
+            line[strcspn(line, "\n")] = 0;
+            strcpy(current->email, line);
+
+            fgets(line, sizeof(line), file);
+            line[strcspn(line, "\n")] = 0;
+            strcpy(current->password, line);
         }
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->name, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->family_name, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->ncode, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->numberphone, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->email, line);
-
-        fgets(line, sizeof(line), file);
-        line[strcspn(line, "\n")] = 0;
-        strcpy(current->password, line);
+        fclose(file);
     }
-    fclose(file);
-
     char inputUsername[50];
     char inputPassword[50];
 
@@ -596,16 +618,6 @@ bck1:   printf("Enter password (%d attempts left): \n" , j);
         j-- ;
         goto bck1;
     }
-    if (i == 1 || j == 1)
-    {
-
-        printf("\nYour attempts were too many.\n Please press a key to be redirected to the menu \n");
-        getch();
-        fflush(stdin);
-        system("cls");
-        menu();
-
-    }
 
     if (loggedIn == 1)
     {
@@ -619,10 +631,22 @@ bck1:   printf("Enter password (%d attempts left): \n" , j);
         fflush(stdin);
         menuuser(2);
     }
+    if (i == 1 || j == 1)
+    {
+
+        printf("\nYour attempts were too many.\n Please press a key to be redirected to the menu \n");
+        getch();
+        fflush(stdin);
+        system("cls");
+        menu();
+
+    }
+
 
 }
 void menuuser(int admin)
 {
+
     if (admin == 2)
         printf("ADMINISTRATOR - FULL access for %s \n" ,current->username);
     else
@@ -742,6 +766,9 @@ void Sell(int admin)
             int total_meterage;
             char phone[12];
             int bedroom;
+            int year;
+            int month;
+            int day;
             char cost[12];
         };
 
@@ -775,6 +802,15 @@ void Sell(int admin)
         printf("\n-Number of bedrooms: ");
         scanf("%d", &property.bedroom);
 
+        printf("\nToday's Date:\n\n -Year: ");
+        scanf("%d", &property.year);
+
+        printf("\n-Month: ");
+        scanf("%d", &property.month);
+
+        printf("\n-Day: ");
+        scanf("%d", &property.day);
+
         printf("\n-Sales price: ");
         scanf("%s", &property.cost);
 
@@ -782,11 +818,11 @@ void Sell(int admin)
         getch();
         fflush(stdin);
 
-        fprintf(houses, "1\n%d\n", property.area);
+        fprintf(houses, "\n1\n%d\n", property.area);
         fprintf(houses, "%s", property.address);
         fprintf(houses, "%s", property.type);
         fprintf(houses , "\n%d\n%d\n%d\n", property.old, property.meterage, property.floor);
-        fprintf(houses, "%d\n%s\n%d\n%s\n%s\n", property.total_meterage, property.phone, property.bedroom, property.cost,current->username);
+        fprintf(houses, "%d\n%s\n%d\n%d\n%d\n%d\n%s\n%s", property.total_meterage, property.phone, property.bedroom,property.year,property.month,property.day, property.cost,current->username);
 
 
         printf("\n\nThe property has been successfully registered.\nPress the key to return to the user menu :");
@@ -826,6 +862,9 @@ void Sell(int admin)
         int total_meterage;
         char phone[12];
         int oroom;
+        int year;
+        int month;
+        int day;
         char cost[12];
     };
 
@@ -859,6 +898,15 @@ void Sell(int admin)
     printf("\n-Number of Office rooms: ");
     scanf("%d", &offices.oroom);
 
+    printf("\nToday's Date:\n\n -Year: ");
+    scanf("%d", &offices.year);
+
+    printf("\n-Month: ");
+    scanf("%d", &offices.month);
+
+    printf("\n-Day: ");
+    scanf("%d", &offices.day);
+
     printf("\n-Sales price: ");
     scanf("%s", &offices.cost);
 
@@ -866,11 +914,11 @@ void Sell(int admin)
     getch();
     fflush(stdin);
 
-    fprintf(officess, "1\n%d\n", offices.area);
+    fprintf(officess, "\n1\n%d\n", offices.area);
     fprintf(officess, "%s", offices.address);
     fprintf(officess, "%s", offices.type);
     fprintf(officess , "%d\n%d\n%d\n", offices.old, offices.meterage, offices.floor);
-    fprintf(officess, "%d\n%s\n%d\n%s\n%s\n", offices.total_meterage, offices.phone, offices.oroom, offices.cost,current->username);
+    fprintf(officess, "%d\n%s\n%d\n%d\n%d\n%d\n%s\n%s", offices.total_meterage, offices.phone, offices.oroom,offices.year,offices.month,offices.day, offices.cost,current->username);
 
 
     printf("\n\nThe Office has been successfully registered.\nPress the key to return to the user menu :");
@@ -906,6 +954,9 @@ void Sell(int admin)
         char type[50];
         int meterage;
         char phone[12];
+        int year;
+        int month;
+        int day;
         char cost[12];
     };
 
@@ -927,6 +978,15 @@ void Sell(int admin)
     printf("\n-Contact number of the owner: ");
     scanf("%s", &landss.phone);
 
+    printf("\nToday's Date:\n\n -Year: ");
+    scanf("%d", &landss.year);
+
+    printf("\n-Month: ");
+    scanf("%d", &landss.month);
+
+    printf("\n-Day: ");
+    scanf("%d", &landss.day);
+
     printf("\n-Sales price: ");
     scanf("%s", &landss.cost);
 
@@ -934,11 +994,11 @@ void Sell(int admin)
     getch();
     fflush(stdin);
 
-    fprintf(lands, "1\n%d\n", landss.area);
+    fprintf(lands, "\n1\n%d\n", landss.area);
     fprintf(lands, "%s", landss.address);
     fprintf(lands, "%s", landss.type);
     fprintf(lands , "%d\n",landss.meterage);
-    fprintf(lands, "%s\n%s\n%s\n", landss.phone, landss.cost,current->username);
+    fprintf(lands, "%s\n%d\n%d\n%d\n%s\n%s", landss.phone,landss.year,landss.month,landss.day, landss.cost,current->username);
 
 
     printf("\n\nThe Land has been successfully registered.\nPress the key to return to the user menu :");
@@ -1008,6 +1068,9 @@ void Rent(int admin)
             int total_meterage;
             char phone[12];
             int bedroom;
+            int year;
+            int month;
+            int day;
             char amount[12];
             char mortgage[12];
         };
@@ -1042,6 +1105,15 @@ void Rent(int admin)
         printf("\n-Number of bedrooms: ");
         scanf("%d", &propertyr.bedroom);
 
+        printf("\nToday's Date:\n\n -Year: ");
+        scanf("%d", &propertyr.year);
+
+        printf("\n-Month: ");
+        scanf("%d", &propertyr.month);
+
+        printf("\n-Day: ");
+        scanf("%d", &propertyr.day);
+
         printf("\n-Home mortgage amount: ");
         scanf("%s", &propertyr.mortgage);
 
@@ -1052,11 +1124,11 @@ void Rent(int admin)
         getch();
         fflush(stdin);
 
-        fprintf(houser, "1\n%d\n", propertyr.area);
+        fprintf(houser, "\n1\n%d\n", propertyr.area);
         fprintf(houser, "%s", propertyr.address);
         fprintf(houser, "%s", propertyr.type);
         fprintf(houser , "\n%d\n%d\n%d\n", propertyr.old, propertyr.meterage, propertyr.floor);
-        fprintf(houser, "%d\n%s\n%d\n%s\n%s\n%s\n", propertyr.total_meterage, propertyr.phone, propertyr.bedroom, propertyr.amount , propertyr.mortgage,current->username);
+        fprintf(houser, "%d\n%s\n%d\n%d\n%d\n%d\n%s\n%s\n%s", propertyr.total_meterage, propertyr.phone, propertyr.bedroom,propertyr.year,propertyr.month,propertyr.day, propertyr.amount , propertyr.mortgage,current->username);
 
 
         printf("\n\nThe property has been successfully registered.\nPress the key to return to the user menu :");
@@ -1096,6 +1168,9 @@ void Rent(int admin)
         int total_meterage;
         char phone[12];
         int oroom;
+        int year;
+        int month;
+        int day;
         char amount[12];
         char mortgage[12];
     };
@@ -1130,6 +1205,15 @@ void Rent(int admin)
     printf("\n-Number of Office rooms: ");
     scanf("%d", &officerr.oroom);
 
+    printf("\nToday's Date:\n\n -Year: ");
+    scanf("%d", &officerr.year);
+
+    printf("\n-Month: ");
+    scanf("%d", &officerr.month);
+
+    printf("\n-Day: ");
+    scanf("%d", &officerr.day);
+
     printf("\n-Office mortgage amount: ");
     scanf("%s", &officerr.mortgage);
 
@@ -1140,11 +1224,11 @@ void Rent(int admin)
     getch();
     fflush(stdin);
 
-    fprintf(officer, "1\n%d\n", officerr.area);
+    fprintf(officer, "\n1\n%d\n", officerr.area);
     fprintf(officer, "%s", officerr.address);
     fprintf(officer, "%s", officerr.type);
     fprintf(officer , "%d\n%d\n%d\n", officerr.old, officerr.meterage, officerr.floor);
-    fprintf(officer, "%d\n%s\n%d\n%s\n%s\n%s\n", officerr.total_meterage, officerr.phone, officerr.oroom, officerr.amount , officerr.mortgage,current->username);
+    fprintf(officer, "%d\n%s\n%d\n%d\n%d\n%d\n%s\n%s\n%s", officerr.total_meterage, officerr.phone, officerr.oroom,officerr.year,officerr.month,officerr.day, officerr.amount , officerr.mortgage,current->username);
 
 
     printf("\n\nThe Office has been successfully registered.\nPress the key to return to the user menu :");
@@ -1180,6 +1264,9 @@ void Rent(int admin)
         char type[50];
         int meterage;
         char phone[12];
+        int year;
+        int month;
+        int day;
         char amount[12];
         char mortgage[12];
     };
@@ -1202,6 +1289,15 @@ void Rent(int admin)
     printf("\n-Contact number of the owner: ");
     scanf("%s", &landrr.phone);
 
+    printf("\nToday's Date:\n\n -Year: ");
+    scanf("%d", &landrr.year);
+
+    printf("\n-Month: ");
+    scanf("%d", &landrr.month);
+
+    printf("\n-Day: ");
+    scanf("%d", &landrr.day);
+
     printf("\n-Lend mortgage amount: ");
     scanf("%s", &landrr.mortgage);
 
@@ -1212,11 +1308,11 @@ void Rent(int admin)
     getch();
     fflush(stdin);
 
-    fprintf(landr, "1\n%d\n", landrr.area);
+    fprintf(landr, "\n1\n%d\n", landrr.area);
     fprintf(landr, "%s", landrr.address);
     fprintf(landr, "%s", landrr.type);
     fprintf(landr , "%d\n",landrr.meterage);
-    fprintf(landr, "%s\n%s\n%s\n%s\n", landrr.phone,landrr.amount, landrr.mortgage,current->username);
+    fprintf(landr, "%s\n%d\n%d\n%d\n%s\n%s\n%s", landrr.phone,landrr.year,landrr.month,landrr.day,landrr.amount, landrr.mortgage,current->username);
 
 
     printf("\n\nThe Land has been successfully registered.\nPress the key to return to the user menu :");
@@ -1617,6 +1713,12 @@ void reports()
         fgets(line, sizeof(line), fp); // Read the bedroom line
         sscanf(line, "%d", &d->bedroom);
         fgets(line, sizeof(line), fp); // Read the cost line
+        sscanf(line, "%d", &d->year);
+        fgets(line, sizeof(line), fp);
+        sscanf(line, "%d", &d->month);
+        fgets(line, sizeof(line), fp);
+        sscanf(line, "%d", &d->day);
+        fgets(line, sizeof(line), fp);
         sscanf(line, "%d", &d->cost);
         fgets(line, sizeof(line), fp); // Read the cost line
         sscanf(line, "%s", &d->writer);
@@ -1688,6 +1790,12 @@ void reports()
         fgets(lineos, sizeof(lineos), fpos); // Read the bedroom line
         sscanf(lineos, "%d", &dos->officeroom);
         fgets(lineos, sizeof(lineos), fpos); // Read the cost line
+        sscanf(lineos, "%d", &dos->year);
+        fgets(lineos, sizeof(lineos), fpos);
+        sscanf(lineos, "%d", &dos->month);
+        fgets(lineos, sizeof(lineos), fpos);
+        sscanf(lineos, "%d", &dos->day);
+        fgets(lineos, sizeof(lineos), fpos);
         sscanf(lineos, "%d", &dos->cost);
         fgets(lineos, sizeof(lineos), fpos); // Read the cost line
         sscanf(lineos, "%s", &dos->writer);
@@ -1755,6 +1863,12 @@ void reports()
         fgets(linels, sizeof(linels), fpls); // Read the phone line
         sscanf(linels, "%s", dls->phone);
         fgets(linels, sizeof(linels), fpls); // Read the cost line
+        sscanf(linels, "%d", &dls->year);
+        fgets(linels, sizeof(linels), fpls);
+        sscanf(linels, "%d", &dls->month);
+        fgets(linels, sizeof(linels), fpls);
+        sscanf(linels, "%d", &dls->day);
+        fgets(linels, sizeof(linels), fpls);
         sscanf(linels, "%d", &dls->cost);
         fgets(linels, sizeof(linels), fpls); // Read the Writer
         sscanf(linels, "%s", &dls->writer);
@@ -1828,6 +1942,12 @@ void reports()
         sscanf(linehr, "%s", dhr->phone);
         fgets(linehr, sizeof(linehr), fphr); // Read the bedroom line
         sscanf(linehr, "%d", &dhr->bedroom);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->year);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->month);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->day);
         fgets(linehr, sizeof(linehr), fphr);
         sscanf(linehr, "%d", &dhr->amount);
         fgets(linehr, sizeof(linehr), fphr);
@@ -1906,6 +2026,12 @@ void reports()
         fgets(lineor, sizeof(lineor), fpor); // Read the bedroom line
         sscanf(lineor, "%d", &dor->officeroom);
         fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->year);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->month);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->day);
+        fgets(lineor, sizeof(lineor), fpor);
         sscanf(lineor, "%d", &dor->amount);
         fgets(lineor, sizeof(lineor), fpor);
         sscanf(lineor, "%d", &dor->mortgage);
@@ -1970,7 +2096,13 @@ void reports()
         sscanf(linelr, "%d", &dlr->meterage);
         fgets(linelr, sizeof(linelr), fplr); // Read the phone line
         sscanf(linelr, "%s", dlr->phone);
-        fgets(linelr, sizeof(linelr), fplr); // Read the bedroom line
+        fgets(linelr, sizeof(linelr), fplr);
+        sscanf(linelr, "%d", &dlr->year);
+        fgets(linelr, sizeof(linelr), fplr);
+        sscanf(linelr, "%d", &dlr->month);
+        fgets(linelr, sizeof(linelr), fplr);
+        sscanf(linelr, "%d", &dlr->day);
+        fgets(linelr, sizeof(linelr), fplr);
         sscanf(linelr, "%d", &dlr->amount);
         fgets(linelr, sizeof(linelr), fplr); // Read the cost line
         sscanf(linelr, "%d", &dlr->mortgage);
@@ -3202,6 +3334,12 @@ void adminreports()
         fgets(line, sizeof(line), fp); // Read the bedroom line
         sscanf(line, "%d", &d->bedroom);
         fgets(line, sizeof(line), fp); // Read the cost line
+        sscanf(line, "%d", &d->year);
+        fgets(line, sizeof(line), fp);
+        sscanf(line, "%d", &d->month);
+        fgets(line, sizeof(line), fp);
+        sscanf(line, "%d", &d->day);
+        fgets(line, sizeof(line), fp);
         sscanf(line, "%d", &d->cost);
         fgets(line, sizeof(line), fp); // Read the cost line
         sscanf(line, "%s", &d->writer);
@@ -3273,6 +3411,12 @@ void adminreports()
         fgets(lineos, sizeof(lineos), fpos); // Read the bedroom line
         sscanf(lineos, "%d", &dos->officeroom);
         fgets(lineos, sizeof(lineos), fpos); // Read the cost line
+        sscanf(lineos, "%d", &dos->year);
+        fgets(lineos, sizeof(lineos), fpos);
+        sscanf(lineos, "%d", &dos->month);
+        fgets(lineos, sizeof(lineos), fpos);
+        sscanf(lineos, "%d", &dos->day);
+        fgets(lineos, sizeof(lineos), fpos);
         sscanf(lineos, "%d", &dos->cost);
         fgets(lineos, sizeof(lineos), fpos); // Read the cost line
         sscanf(lineos, "%s", &dos->writer);
@@ -3340,6 +3484,12 @@ void adminreports()
         fgets(linels, sizeof(linels), fpls); // Read the phone line
         sscanf(linels, "%s", dls->phone);
         fgets(linels, sizeof(linels), fpls); // Read the cost line
+        sscanf(linels, "%d", &dls->year);
+        fgets(linels, sizeof(linels), fpls);
+        sscanf(linels, "%d", &dls->month);
+        fgets(linels, sizeof(linels), fpls);
+        sscanf(linels, "%d", &dls->day);
+        fgets(linels, sizeof(linels), fpls);
         sscanf(linels, "%d", &dls->cost);
         fgets(linels, sizeof(linels), fpls); // Read the Writer
         sscanf(linels, "%s", &dls->writer);
@@ -3413,6 +3563,12 @@ void adminreports()
         sscanf(linehr, "%s", dhr->phone);
         fgets(linehr, sizeof(linehr), fphr); // Read the bedroom line
         sscanf(linehr, "%d", &dhr->bedroom);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->year);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->month);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->day);
         fgets(linehr, sizeof(linehr), fphr);
         sscanf(linehr, "%d", &dhr->amount);
         fgets(linehr, sizeof(linehr), fphr);
@@ -3491,6 +3647,12 @@ void adminreports()
         fgets(lineor, sizeof(lineor), fpor); // Read the bedroom line
         sscanf(lineor, "%d", &dor->officeroom);
         fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->year);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->month);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->day);
+        fgets(lineor, sizeof(lineor), fpor);
         sscanf(lineor, "%d", &dor->amount);
         fgets(lineor, sizeof(lineor), fpor);
         sscanf(lineor, "%d", &dor->mortgage);
@@ -3555,7 +3717,13 @@ void adminreports()
         sscanf(linelr, "%d", &dlr->meterage);
         fgets(linelr, sizeof(linelr), fplr); // Read the phone line
         sscanf(linelr, "%s", dlr->phone);
-        fgets(linelr, sizeof(linelr), fplr); // Read the bedroom line
+        fgets(linelr, sizeof(linelr), fplr);
+        sscanf(linelr, "%d", &dlr->year);
+        fgets(linelr, sizeof(linelr), fplr);
+        sscanf(linelr, "%d", &dlr->month);
+        fgets(linelr, sizeof(linelr), fplr);
+        sscanf(linelr, "%d", &dlr->day);
+        fgets(linelr, sizeof(linelr), fplr);
         sscanf(linelr, "%d", &dlr->amount);
         fgets(linelr, sizeof(linelr), fplr); // Read the cost line
         sscanf(linelr, "%d", &dlr->mortgage);
@@ -3595,7 +3763,7 @@ void adminreports()
     fflush(stdin);
     system("cls");
     printf("1 - The number of properties in the archives\n\n2 - List of properties available in a specific municipal area\n\n3 - List of properties with specific building age\n\n4 - List of properties with specific infrastructure size\n\n5 - List of all residential properties with specific number of bedrooms\n\n6 - List of properties with a certain price\n\n7 - List of rental properties with specific limits for mortgage and rent\n\n8 - List of all apartments available in a particular floor\n\n");
-    printf("9 - The total value of properties registered in the system for sale\n\n10 - The list of system users who have registered properties in the system\n\n11 - The list of properties registered in the system in a certain period\n\n12 - List of properties removed in a specific time period\n\n13 - The list of system users and the date of the last activity of each user\n\n0 - Return To The Previous Menu\n\n\n>Please Enter Your Choice: ");
+    printf("9 - The total value of properties registered in the system for sale\n\n10 - The list of system users who have registered properties in the system\n\n11 - The list of properties registered in the system in a certain period\n\n12 - List of properties Removed\n\n13 - The list of system users and the date of the last activity of each user\n\n0 - Return To The Previous Menu\n\n\n>Please Enter Your Choice: ");
     char inputrr[5];
     gets(inputrr);
     int a = atoi(inputrr);
@@ -4780,7 +4948,6 @@ void adminreports()
 
         case 10:
             system("cls");
-            current = head;
             int n =0 ;
             char maxu[30] , minu[30];
             int maxv , minv;
@@ -4885,10 +5052,1066 @@ void adminreports()
             break;
 
 
+        case 11 :
+            system("cls");
+            int yr , mh, dy ;
+            printf ("First, enter today's date :\n");
+            printf("Year : \n");
+            scanf("%d",&yr);
+            printf("Month : \n");
+            scanf("%d",&mh);
+            printf("Day : \n");
+            scanf("%d",&dy);
+            system("cls");
+            printf("Date : %d - %d - %d \n",yr,mh,dy);
+            printf(" - List of properties registered in the system in a certain period :\n\n");
 
+            printf("Choose what to search by : \n\n\n");
+            printf(" - 1 Daily  \n\n");
+            printf(" - 2 Weekly  \n\n");
+            printf(" - 3 Monthly  \n\n");
+            printf(" - 0 Return To The Previous Menu\n\n\n>Please Enter Your Choice: ");
+            char tmp ;
+            fflush(stdin);
+            tmp = getchar();
+            fflush(stdin);
+            int in , mh2 , dy2;
+            switch(tmp)
+            {
+                case '1' :
+                    fflush(stdin);
+                    system("cls");
+                    printf("Daily : \n");
+                    printf("\n\nHow many Days before can I show you the registered properties?\nPlease enter the number\n");
+                    scanf("%d",&in);
+                    fflush(stdin);
+                    system("cls");
+                    printf("All properties registered in the last %d Days Ago: \n\n\n" , in);
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("Houses for sale : \n");
+                    d = p;
+                    dy2 = dy;
+                    mh2 = mh;
 
-            printf("\nPress a key for back to menu \n");
-            getch();
+                    while (d != NULL)
+                    {
+                        if (d->active == 1 && d->day <= dy && d->day >= dy - in && d->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", d->area);
+                            printf("address : %s\n", d->address);
+                            printf("type : %s\n", d->type);
+                            printf("old : %d\n", d->old);
+                            printf("meterage : %d\n", d->meterage);
+                            printf("floor : %d\n", d->floor);
+                            printf("total meterage : %d\n", d->total_meterage);
+                            printf("phone : %s\n", d->phone);
+                            printf("bedroom : %d\n", d->bedroom);
+                            printf("Date :  %d - %d - %d \n", d->year , d->month , d->day);
+                            printf("cost : %d Rial\n", d->cost);
+                        }
+                        d = d->hsnext;
+                    }
+                    d = p;
+                    if (dy - in <1)
+                    {
+                        dy2 = 30 + (dy - in) ;
+                        mh2 = mh - 1;
+                        while (d != NULL)
+                        {
+                            if (d->active == 1 && d->day <= 30 && d->day >= dy2 && d->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", d->area);
+                                printf("address : %s\n", d->address);
+                                printf("type : %s\n", d->type);
+                                printf("old : %d\n", d->old);
+                                printf("meterage : %d\n", d->meterage);
+                                printf("floor : %d\n", d->floor);
+                                printf("total meterage : %d\n", d->total_meterage);
+                                printf("phone : %s\n", d->phone);
+                                printf("bedroom : %d\n", d->bedroom);
+                                printf("Date :  %d - %d - %d \n", d->year , d->month , d->day);
+                                printf("cost : %d Rial\n", d->cost);
+                            }
+                            d = d->hsnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo houses were found for sale in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n\nOffices for sale : \n");
+                    dos = pos;
+                    while (dos != NULL)
+                    {
+                        if (dos->active == 1 && dos->day <= dy && dos->day >= dy - in && dos->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dos->area);
+                            printf("address : %s\n", dos->address);
+                            printf("type : %s\n", dos->type);
+                            printf("old : %d\n", dos->old);
+                            printf("meterage : %d\n", dos->meterage);
+                            printf("floor : %d\n", dos->floor);
+                            printf("total meterage : %d\n", dos->total_meterage);
+                            printf("phone : %s\n", dos->phone);
+                            printf("office room : %d\n", dos->officeroom);
+                            printf("Date :  %d - %d - %d \n", dos->year , dos->month , dos->day);
+                            printf("cost : %d Rial\n", dos->cost);
+                        }
+                        dos = dos->osnext;
+                    }
+                    dos = pos;
+                    if (dy - in <1)
+                    {
+                        while (dos != NULL)
+                        {
+                            if (dos->active == 1 && dos->day <= 30 && dos->day >= dy2 && dos->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dos->area);
+                                printf("address : %s\n", dos->address);
+                                printf("type : %s\n", dos->type);
+                                printf("old : %d\n", dos->old);
+                                printf("meterage : %d\n", dos->meterage);
+                                printf("floor : %d\n", dos->floor);
+                                printf("total meterage : %d\n", dos->total_meterage);
+                                printf("phone : %s\n", dos->phone);
+                                printf("office room : %d\n", dos->officeroom);
+                                printf("Date :  %d - %d - %d \n", dos->year , dos->month , dos->day);
+                                printf("cost : %d Rial\n", dos->cost);
+                            }
+                            dos = dos->osnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\nNo offices were found for sale in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("Lands for sale : \n");
+                    dls = pls;
+                    while (dls != NULL)
+                    {
+                        if (dls->active == 1 && dls->day <= dy && dls->day >= dy - in && dls->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dls->area);
+                            printf("address : %s\n", dls->address);
+                            printf("type : %s\n", dls->type);
+                            printf("meterage : %d\n", dls->meterage);
+                            printf("phone : %s\n", dls->phone);
+                            printf("Date :  %d - %d - %d \n", dls->year , dls->month , dls->day);
+                            printf("cost : %d Rial\n", dls->cost);
+                        }
+                        dls = dls->lsnext;
+                    }
+                    dls = pls;
+                    if (dy - in <1)
+                    {
+                        while (dls != NULL)
+                        {
+                            if (dls->active == 1 && dls->day <= 30 && dls->day >= dy2 && dls->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dls->area);
+                                printf("address : %s\n", dls->address);
+                                printf("type : %s\n", dls->type);
+                                printf("meterage : %d\n", dls->meterage);
+                                printf("phone : %s\n", dls->phone);
+                                printf("Date :  %d - %d - %d \n", dls->year , dls->month , dls->day);
+                                printf("cost : %d Rial\n", dls->cost);
+                            }
+                            dls = dls->lsnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo Lands were found for sale in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n\nHouses for Rent : \n");
+                    dhr = phr;
+                    while (dhr != NULL)
+                    {
+                        if (dhr->active == 1 && dhr->day <= dy && dhr->day >= dy - in && dhr->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dhr->area);
+                            printf("address : %s\n", dhr->address);
+                            printf("type : %s\n", dhr->type);
+                            printf("old : %d\n", dhr->old);
+                            printf("meterage : %d\n", dhr->meterage);
+                            printf("floor : %d\n", dhr->floor);
+                            printf("total meterage : %d\n", dhr->total_meterage);
+                            printf("phone : %s\n", dhr->phone);
+                            printf("bedroom : %d\n", dhr->bedroom);
+                            printf("Date :  %d - %d - %d \n", dhr->year , dhr->month , dhr->day);
+                            printf("monthly rent : %d Rial\n", dhr->amount);
+                            printf("mortgage : %d Rial\n", dhr->mortgage);
+                        }
+                        dhr = dhr->hrnext;
+                    }
+                    dhr = phr;
+                    if (dy - in <1)
+                    {
+                        while (dhr != NULL)
+                        {
+                            if (dhr->active == 1 && dhr->day <= 30 && dhr->day >= dy2 && dhr->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dhr->area);
+                                printf("address : %s\n", dhr->address);
+                                printf("type : %s\n", dhr->type);
+                                printf("old : %d\n", dhr->old);
+                                printf("meterage : %d\n", dhr->meterage);
+                                printf("floor : %d\n", dhr->floor);
+                                printf("total meterage : %d\n", dhr->total_meterage);
+                                printf("phone : %s\n", dhr->phone);
+                                printf("bedroom : %d\n", dhr->bedroom);
+                                printf("Date :  %d - %d - %d \n", dhr->year , dhr->month , dhr->day);
+                                printf("monthly rent : %d Rial\n", dhr->amount);
+                                printf("mortgage : %d Rial\n", dhr->mortgage);
+                            }
+                        dhr = dhr->hrnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo Houses were found for rent in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n\nOffice for Rent : \n");
+                    dor = por;
+                    while (dor != NULL)
+                    {
+                        if (dor->active == 1 && dor->day <= dy && dor->day >= dy - in && dor->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dor->area);
+                            printf("address : %s\n", dor->address);
+                            printf("type : %s\n", dor->type);
+                            printf("old : %d\n", dor->old);
+                            printf("meterage : %d\n", dor->meterage);
+                            printf("floor : %d\n", dor->floor);
+                            printf("total meterage : %d\n", dor->total_meterage);
+                            printf("phone : %s\n", dor->phone);
+                            printf("office room : %d\n", dor->officeroom);
+                            printf("Date :  %d - %d - %d \n", dor->year , dor->month , dor->day);
+                            printf("monthly rent : %d Rial\n", dor->amount);
+                            printf("mortgage : %d Rial\n", dor->mortgage);
+                        }
+                        dor = dor->ornext;
+                    }
+                    dor = por;
+                    if (dy - in <1)
+                    {
+                        while (dor != NULL)
+                        {
+                            if (dor->active == 1 && dor->day <= 30 && dor->day >= dy2 && dor->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dor->area);
+                                printf("address : %s\n", dor->address);
+                                printf("type : %s\n", dor->type);
+                                printf("old : %d\n", dor->old);
+                                printf("meterage : %d\n", dor->meterage);
+                                printf("floor : %d\n", dor->floor);
+                                printf("total meterage : %d\n", dor->total_meterage);
+                                printf("phone : %s\n", dor->phone);
+                                printf("office room : %d\n", dor->officeroom);
+                                printf("Date :  %d - %d - %d \n", dor->year , dor->month , dor->day);
+                                printf("monthly rent : %d Rial\n", dor->amount);
+                                printf("mortgage : %d Rial\n", dor->mortgage);
+                            }
+                        dor = dor->ornext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo offices were found for rent in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("Lands for Rent : \n");
+                    dlr = plr;
+                    while (dlr != NULL)
+                    {
+                        if (dlr->active == 1 && dlr->day <= dy && dlr->day >= dy - in && dlr->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dlr->area);
+                            printf("address : %s\n", dlr->address);
+                            printf("type : %s\n", dlr->type);
+                            printf("meterage : %d\n", dlr->meterage);
+                            printf("phone : %s\n", dlr->phone);
+                            printf("Date :  %d - %d - %d \n", dlr->year , dlr->month , dlr->day);
+                            printf("monthly rent : %d Rial\n", dlr->amount);
+                            printf("mortgage : %d Rial\n", dlr->mortgage);
+                        }
+                        dlr = dlr->lrnext;
+                    }
+                    dlr = plr;
+                    if (dy - in <1)
+                    {
+                        while (dlr != NULL)
+                        {
+                            if (dlr->active == 1 && dlr->day <= 30 && dlr->day >= dy2 && dlr->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dlr->area);
+                                printf("address : %s\n", dlr->address);
+                                printf("type : %s\n", dlr->type);
+                                printf("meterage : %d\n", dlr->meterage);
+                                printf("phone : %s\n", dlr->phone);
+                                printf("Date :  %d - %d - %d \n", dlr->year , dlr->month , dlr->day);
+                                printf("monthly rent : %d Rial\n", dlr->amount);
+                                printf("mortgage : %d Rial\n", dlr->mortgage);
+                            }
+                            dlr = dlr->lrnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo Lands were found for sale in this Date Renge!\n\n");
+                    }
+
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+
+                    printf("\nPress a key for back to menu \n");
+                    getch();
+
+                    break;
+
+                case '2' :
+                    fflush(stdin);
+                    system("cls");
+                    printf("Weekly : \n");
+                    printf("\n\nHow many Weeks before can I show you the registered properties?\nPlease enter the number\n");
+                    scanf("%d",&in);
+                    fflush(stdin);
+                    system("cls");
+                    printf("All properties registered in the last %d Weeks Ago: \n\n\n" , in);
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("Houses for sale : \n");
+                    d = p;
+                    in = in * 7 ;
+                    dy2 = dy;
+                    mh2 = mh;
+
+                    while (d != NULL)
+                    {
+                        if (d->active == 1 && d->day <= dy && d->day >= dy - in && d->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", d->area);
+                            printf("address : %s\n", d->address);
+                            printf("type : %s\n", d->type);
+                            printf("old : %d\n", d->old);
+                            printf("meterage : %d\n", d->meterage);
+                            printf("floor : %d\n", d->floor);
+                            printf("total meterage : %d\n", d->total_meterage);
+                            printf("phone : %s\n", d->phone);
+                            printf("bedroom : %d\n", d->bedroom);
+                            printf("Date :  %d - %d - %d \n", d->year , d->month , d->day);
+                            printf("cost : %d Rial\n", d->cost);
+                        }
+                        d = d->hsnext;
+                    }
+                    d = p;
+                    if (dy - in <1)
+                    {
+                        dy2 = 30 + (dy - in) ;
+                        mh2 = mh - 1;
+                        while (d != NULL)
+                        {
+                            if (d->active == 1 && d->day <= 30 && d->day >= dy2 && d->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", d->area);
+                                printf("address : %s\n", d->address);
+                                printf("type : %s\n", d->type);
+                                printf("old : %d\n", d->old);
+                                printf("meterage : %d\n", d->meterage);
+                                printf("floor : %d\n", d->floor);
+                                printf("total meterage : %d\n", d->total_meterage);
+                                printf("phone : %s\n", d->phone);
+                                printf("bedroom : %d\n", d->bedroom);
+                                printf("Date :  %d - %d - %d \n", d->year , d->month , d->day);
+                                printf("cost : %d Rial\n", d->cost);
+                            }
+                            d = d->hsnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo houses were found for sale in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n\nOffices for sale : \n");
+                    dos = pos;
+                    while (dos != NULL)
+                    {
+                        if (dos->active == 1 && dos->day <= dy && dos->day >= dy - in && dos->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dos->area);
+                            printf("address : %s\n", dos->address);
+                            printf("type : %s\n", dos->type);
+                            printf("old : %d\n", dos->old);
+                            printf("meterage : %d\n", dos->meterage);
+                            printf("floor : %d\n", dos->floor);
+                            printf("total meterage : %d\n", dos->total_meterage);
+                            printf("phone : %s\n", dos->phone);
+                            printf("office room : %d\n", dos->officeroom);
+                            printf("Date :  %d - %d - %d \n", dos->year , dos->month , dos->day);
+                            printf("cost : %d Rial\n", dos->cost);
+                        }
+                        dos = dos->osnext;
+                    }
+                    dos = pos;
+                    if (dy - in <1)
+                    {
+                        while (dos != NULL)
+                        {
+                            if (dos->active == 1 && dos->day <= 30 && dos->day >= dy2 && dos->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dos->area);
+                                printf("address : %s\n", dos->address);
+                                printf("type : %s\n", dos->type);
+                                printf("old : %d\n", dos->old);
+                                printf("meterage : %d\n", dos->meterage);
+                                printf("floor : %d\n", dos->floor);
+                                printf("total meterage : %d\n", dos->total_meterage);
+                                printf("phone : %s\n", dos->phone);
+                                printf("office room : %d\n", dos->officeroom);
+                                printf("Date :  %d - %d - %d \n", dos->year , dos->month , dos->day);
+                                printf("cost : %d Rial\n", dos->cost);
+                            }
+                            dos = dos->osnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\nNo offices were found for sale in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("Lands for sale : \n");
+                    dls = pls;
+                    while (dls != NULL)
+                    {
+                        if (dls->active == 1 && dls->day <= dy && dls->day >= dy - in && dls->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dls->area);
+                            printf("address : %s\n", dls->address);
+                            printf("type : %s\n", dls->type);
+                            printf("meterage : %d\n", dls->meterage);
+                            printf("phone : %s\n", dls->phone);
+                            printf("Date :  %d - %d - %d \n", dls->year , dls->month , dls->day);
+                            printf("cost : %d Rial\n", dls->cost);
+                        }
+                        dls = dls->lsnext;
+                    }
+                    dls = pls;
+                    if (dy - in <1)
+                    {
+                        while (dls != NULL)
+                        {
+                            if (dls->active == 1 && dls->day <= 30 && dls->day >= dy2 && dls->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dls->area);
+                                printf("address : %s\n", dls->address);
+                                printf("type : %s\n", dls->type);
+                                printf("meterage : %d\n", dls->meterage);
+                                printf("phone : %s\n", dls->phone);
+                                printf("Date :  %d - %d - %d \n", dls->year , dls->month , dls->day);
+                                printf("cost : %d Rial\n", dls->cost);
+                            }
+                            dls = dls->lsnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo Lands were found for sale in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n\nHouses for Rent : \n");
+                    dhr = phr;
+                    while (dhr != NULL)
+                    {
+                        if (dhr->active == 1 && dhr->day <= dy && dhr->day >= dy - in && dhr->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dhr->area);
+                            printf("address : %s\n", dhr->address);
+                            printf("type : %s\n", dhr->type);
+                            printf("old : %d\n", dhr->old);
+                            printf("meterage : %d\n", dhr->meterage);
+                            printf("floor : %d\n", dhr->floor);
+                            printf("total meterage : %d\n", dhr->total_meterage);
+                            printf("phone : %s\n", dhr->phone);
+                            printf("bedroom : %d\n", dhr->bedroom);
+                            printf("Date :  %d - %d - %d \n", dhr->year , dhr->month , dhr->day);
+                            printf("monthly rent : %d Rial\n", dhr->amount);
+                            printf("mortgage : %d Rial\n", dhr->mortgage);
+                        }
+                        dhr = dhr->hrnext;
+                    }
+                    dhr = phr;
+                    if (dy - in <1)
+                    {
+                        while (dhr != NULL)
+                        {
+                            if (dhr->active == 1 && dhr->day <= 30 && dhr->day >= dy2 && dhr->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dhr->area);
+                                printf("address : %s\n", dhr->address);
+                                printf("type : %s\n", dhr->type);
+                                printf("old : %d\n", dhr->old);
+                                printf("meterage : %d\n", dhr->meterage);
+                                printf("floor : %d\n", dhr->floor);
+                                printf("total meterage : %d\n", dhr->total_meterage);
+                                printf("phone : %s\n", dhr->phone);
+                                printf("bedroom : %d\n", dhr->bedroom);
+                                printf("Date :  %d - %d - %d \n", dhr->year , dhr->month , dhr->day);
+                                printf("monthly rent : %d Rial\n", dhr->amount);
+                                printf("mortgage : %d Rial\n", dhr->mortgage);
+                            }
+                        dhr = dhr->hrnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo Houses were found for rent in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n\nOffice for Rent : \n");
+                    dor = por;
+                    while (dor != NULL)
+                    {
+                        if (dor->active == 1 && dor->day <= dy && dor->day >= dy - in && dor->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dor->area);
+                            printf("address : %s\n", dor->address);
+                            printf("type : %s\n", dor->type);
+                            printf("old : %d\n", dor->old);
+                            printf("meterage : %d\n", dor->meterage);
+                            printf("floor : %d\n", dor->floor);
+                            printf("total meterage : %d\n", dor->total_meterage);
+                            printf("phone : %s\n", dor->phone);
+                            printf("office room : %d\n", dor->officeroom);
+                            printf("Date :  %d - %d - %d \n", dor->year , dor->month , dor->day);
+                            printf("monthly rent : %d Rial\n", dor->amount);
+                            printf("mortgage : %d Rial\n", dor->mortgage);
+                        }
+                        dor = dor->ornext;
+                    }
+                    dor = por;
+                    if (dy - in <1)
+                    {
+                        while (dor != NULL)
+                        {
+                            if (dor->active == 1 && dor->day <= 30 && dor->day >= dy2 && dor->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dor->area);
+                                printf("address : %s\n", dor->address);
+                                printf("type : %s\n", dor->type);
+                                printf("old : %d\n", dor->old);
+                                printf("meterage : %d\n", dor->meterage);
+                                printf("floor : %d\n", dor->floor);
+                                printf("total meterage : %d\n", dor->total_meterage);
+                                printf("phone : %s\n", dor->phone);
+                                printf("office room : %d\n", dor->officeroom);
+                                printf("Date :  %d - %d - %d \n", dor->year , dor->month , dor->day);
+                                printf("monthly rent : %d Rial\n", dor->amount);
+                                printf("mortgage : %d Rial\n", dor->mortgage);
+                            }
+                        dor = dor->ornext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo offices were found for rent in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("Lands for Rent : \n");
+                    dlr = plr;
+                    while (dlr != NULL)
+                    {
+                        if (dlr->active == 1 && dlr->day <= dy && dlr->day >= dy - in && dlr->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dlr->area);
+                            printf("address : %s\n", dlr->address);
+                            printf("type : %s\n", dlr->type);
+                            printf("meterage : %d\n", dlr->meterage);
+                            printf("phone : %s\n", dlr->phone);
+                            printf("Date :  %d - %d - %d \n", dlr->year , dlr->month , dlr->day);
+                            printf("monthly rent : %d Rial\n", dlr->amount);
+                            printf("mortgage : %d Rial\n", dlr->mortgage);
+                        }
+                        dlr = dlr->lrnext;
+                    }
+                    dlr = plr;
+                    if (dy - in <1)
+                    {
+                        while (dlr != NULL)
+                        {
+                            if (dlr->active == 1 && dlr->day <= 30 && dlr->day >= dy2 && dlr->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dlr->area);
+                                printf("address : %s\n", dlr->address);
+                                printf("type : %s\n", dlr->type);
+                                printf("meterage : %d\n", dlr->meterage);
+                                printf("phone : %s\n", dlr->phone);
+                                printf("Date :  %d - %d - %d \n", dlr->year , dlr->month , dlr->day);
+                                printf("monthly rent : %d Rial\n", dlr->amount);
+                                printf("mortgage : %d Rial\n", dlr->mortgage);
+                            }
+                            dlr = dlr->lrnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo Lands were found for sale in this Date Renge!\n\n");
+                    }
+
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+
+                    printf("\nPress a key for back to menu \n");
+                    getch();
+                    break;
+
+                case '3' :
+                    fflush(stdin);
+                    system("cls");
+                    printf("Monthly : \n");
+                    printf("\n\nHow many Months before can I show you the registered properties?\nPlease enter the number\n");
+                    scanf("%d",&in);
+                    fflush(stdin);
+                    system("cls");
+                    printf("All properties registered in the last %d Months Ago: \n\n\n" , in);
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("Houses for sale : \n");
+                    d = p;
+                    dy2 = dy;
+                    mh2 = mh;
+
+                    while (d != NULL)
+                    {
+                        if (d->active == 1 && d->day <= dy && d->day >= 1 && d->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", d->area);
+                            printf("address : %s\n", d->address);
+                            printf("type : %s\n", d->type);
+                            printf("old : %d\n", d->old);
+                            printf("meterage : %d\n", d->meterage);
+                            printf("floor : %d\n", d->floor);
+                            printf("total meterage : %d\n", d->total_meterage);
+                            printf("phone : %s\n", d->phone);
+                            printf("bedroom : %d\n", d->bedroom);
+                            printf("Date :  %d - %d - %d \n", d->year , d->month , d->day);
+                            printf("cost : %d Rial\n", d->cost);
+                        }
+                        d = d->hsnext;
+                    }
+                    d = p;
+                    if (dy - (30*in) <1)
+                    {
+                        mh2 = mh - 1;
+                        while (d != NULL)
+                        {
+                            if (d->active == 1 && d->day <= 30 && d->day >= dy && d->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", d->area);
+                                printf("address : %s\n", d->address);
+                                printf("type : %s\n", d->type);
+                                printf("old : %d\n", d->old);
+                                printf("meterage : %d\n", d->meterage);
+                                printf("floor : %d\n", d->floor);
+                                printf("total meterage : %d\n", d->total_meterage);
+                                printf("phone : %s\n", d->phone);
+                                printf("bedroom : %d\n", d->bedroom);
+                                printf("Date :  %d - %d - %d \n", d->year , d->month , d->day);
+                                printf("cost : %d Rial\n", d->cost);
+                            }
+                            d = d->hsnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo houses were found for sale in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n\nOffices for sale : \n");
+                    dos = pos;
+                    while (dos != NULL)
+                    {
+                        if (dos->active == 1 && dos->day <= dy && dos->day >= 1 && dos->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dos->area);
+                            printf("address : %s\n", dos->address);
+                            printf("type : %s\n", dos->type);
+                            printf("old : %d\n", dos->old);
+                            printf("meterage : %d\n", dos->meterage);
+                            printf("floor : %d\n", dos->floor);
+                            printf("total meterage : %d\n", dos->total_meterage);
+                            printf("phone : %s\n", dos->phone);
+                            printf("office room : %d\n", dos->officeroom);
+                            printf("Date :  %d - %d - %d \n", dos->year , dos->month , dos->day);
+                            printf("cost : %d Rial\n", dos->cost);
+                        }
+                        dos = dos->osnext;
+                    }
+                    dos = pos;
+                    if (dy - (30*in) <1)
+                    {
+                        while (dos != NULL)
+                        {
+                            if (dos->active == 1 && dos->day <= 30 && dos->day >= dy && dos->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dos->area);
+                                printf("address : %s\n", dos->address);
+                                printf("type : %s\n", dos->type);
+                                printf("old : %d\n", dos->old);
+                                printf("meterage : %d\n", dos->meterage);
+                                printf("floor : %d\n", dos->floor);
+                                printf("total meterage : %d\n", dos->total_meterage);
+                                printf("phone : %s\n", dos->phone);
+                                printf("office room : %d\n", dos->officeroom);
+                                printf("Date :  %d - %d - %d \n", dos->year , dos->month , dos->day);
+                                printf("cost : %d Rial\n", dos->cost);
+                            }
+                            dos = dos->osnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\nNo offices were found for sale in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("Lands for sale : \n");
+                    dls = pls;
+                    while (dls != NULL)
+                    {
+                        if (dls->active == 1 && dls->day <= dy && dls->day >= 1 && dls->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dls->area);
+                            printf("address : %s\n", dls->address);
+                            printf("type : %s\n", dls->type);
+                            printf("meterage : %d\n", dls->meterage);
+                            printf("phone : %s\n", dls->phone);
+                            printf("Date :  %d - %d - %d \n", dls->year , dls->month , dls->day);
+                            printf("cost : %d Rial\n", dls->cost);
+                        }
+                        dls = dls->lsnext;
+                    }
+                    dls = pls;
+                    if (dy - (30*in) <1)
+                    {
+                        while (dls != NULL)
+                        {
+                            if (dls->active == 1 && dls->day <= 30 && dls->day >= dy && dls->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dls->area);
+                                printf("address : %s\n", dls->address);
+                                printf("type : %s\n", dls->type);
+                                printf("meterage : %d\n", dls->meterage);
+                                printf("phone : %s\n", dls->phone);
+                                printf("Date :  %d - %d - %d \n", dls->year , dls->month , dls->day);
+                                printf("cost : %d Rial\n", dls->cost);
+                            }
+                            dls = dls->lsnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo Lands were found for sale in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n\nHouses for Rent : \n");
+                    dhr = phr;
+                    while (dhr != NULL)
+                    {
+                        if (dhr->active == 1 && dhr->day <= dy && dhr->day >= 1 && dhr->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dhr->area);
+                            printf("address : %s\n", dhr->address);
+                            printf("type : %s\n", dhr->type);
+                            printf("old : %d\n", dhr->old);
+                            printf("meterage : %d\n", dhr->meterage);
+                            printf("floor : %d\n", dhr->floor);
+                            printf("total meterage : %d\n", dhr->total_meterage);
+                            printf("phone : %s\n", dhr->phone);
+                            printf("bedroom : %d\n", dhr->bedroom);
+                            printf("Date :  %d - %d - %d \n", dhr->year , dhr->month , dhr->day);
+                            printf("monthly rent : %d Rial\n", dhr->amount);
+                            printf("mortgage : %d Rial\n", dhr->mortgage);
+                        }
+                        dhr = dhr->hrnext;
+                    }
+                    dhr = phr;
+                    if (dy - (30*in) <1)
+                    {
+                        while (dhr != NULL)
+                        {
+                            if (dhr->active == 1 && dhr->day <= 30 && dhr->day >= dy && dhr->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dhr->area);
+                                printf("address : %s\n", dhr->address);
+                                printf("type : %s\n", dhr->type);
+                                printf("old : %d\n", dhr->old);
+                                printf("meterage : %d\n", dhr->meterage);
+                                printf("floor : %d\n", dhr->floor);
+                                printf("total meterage : %d\n", dhr->total_meterage);
+                                printf("phone : %s\n", dhr->phone);
+                                printf("bedroom : %d\n", dhr->bedroom);
+                                printf("Date :  %d - %d - %d \n", dhr->year , dhr->month , dhr->day);
+                                printf("monthly rent : %d Rial\n", dhr->amount);
+                                printf("mortgage : %d Rial\n", dhr->mortgage);
+                            }
+                        dhr = dhr->hrnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo Houses were found for rent in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n\nOffice for Rent : \n");
+                    dor = por;
+                    while (dor != NULL)
+                    {
+                        if (dor->active == 1 && dor->day <= dy && dor->day >= 1 && dor->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dor->area);
+                            printf("address : %s\n", dor->address);
+                            printf("type : %s\n", dor->type);
+                            printf("old : %d\n", dor->old);
+                            printf("meterage : %d\n", dor->meterage);
+                            printf("floor : %d\n", dor->floor);
+                            printf("total meterage : %d\n", dor->total_meterage);
+                            printf("phone : %s\n", dor->phone);
+                            printf("office room : %d\n", dor->officeroom);
+                            printf("Date :  %d - %d - %d \n", dor->year , dor->month , dor->day);
+                            printf("monthly rent : %d Rial\n", dor->amount);
+                            printf("mortgage : %d Rial\n", dor->mortgage);
+                        }
+                        dor = dor->ornext;
+                    }
+                    dor = por;
+                    if (dy - (30*in) <1)
+                    {
+                        while (dor != NULL)
+                        {
+                            if (dor->active == 1 && dor->day <= 30 && dor->day >= dy && dor->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dor->area);
+                                printf("address : %s\n", dor->address);
+                                printf("type : %s\n", dor->type);
+                                printf("old : %d\n", dor->old);
+                                printf("meterage : %d\n", dor->meterage);
+                                printf("floor : %d\n", dor->floor);
+                                printf("total meterage : %d\n", dor->total_meterage);
+                                printf("phone : %s\n", dor->phone);
+                                printf("office room : %d\n", dor->officeroom);
+                                printf("Date :  %d - %d - %d \n", dor->year , dor->month , dor->day);
+                                printf("monthly rent : %d Rial\n", dor->amount);
+                                printf("mortgage : %d Rial\n", dor->mortgage);
+                            }
+                        dor = dor->ornext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo offices were found for rent in this Date Renge!\n\n");
+                    }
+                    c = 0 ;
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+                    printf("Lands for Rent : \n");
+                    dlr = plr;
+                    while (dlr != NULL)
+                    {
+                        if (dlr->active == 1 && dlr->day <= dy && dlr->day >= 1 && dlr->month == mh)
+                        {
+                            printf("\n--------------------------------------------------------\n");
+                            c++ ;
+                            printf("\n%d-\n\n",c);
+                            printf("area : %d\n", dlr->area);
+                            printf("address : %s\n", dlr->address);
+                            printf("type : %s\n", dlr->type);
+                            printf("meterage : %d\n", dlr->meterage);
+                            printf("phone : %s\n", dlr->phone);
+                            printf("Date :  %d - %d - %d \n", dlr->year , dlr->month , dlr->day);
+                            printf("monthly rent : %d Rial\n", dlr->amount);
+                            printf("mortgage : %d Rial\n", dlr->mortgage);
+                        }
+                        dlr = dlr->lrnext;
+                    }
+                    dlr = plr;
+                    if (dy - (30*in) <1)
+                    {
+                        while (dlr != NULL)
+                        {
+                            if (dlr->active == 1 && dlr->day <= 30 && dlr->day >= dy && dlr->month == mh2)
+                            {
+                                printf("\n--------------------------------------------------------\n");
+                                c++ ;
+                                printf("\n%d-\n\n",c);
+                                printf("area : %d\n", dlr->area);
+                                printf("address : %s\n", dlr->address);
+                                printf("type : %s\n", dlr->type);
+                                printf("meterage : %d\n", dlr->meterage);
+                                printf("phone : %s\n", dlr->phone);
+                                printf("Date :  %d - %d - %d \n", dlr->year , dlr->month , dlr->day);
+                                printf("monthly rent : %d Rial\n", dlr->amount);
+                                printf("mortgage : %d Rial\n", dlr->mortgage);
+                            }
+                            dlr = dlr->lrnext;
+                        }
+                    }
+                    if (c == 0)
+                    {
+                        printf("\n\nNo Lands were found for sale in this Date Renge!\n\n");
+                    }
+
+                    printf("\n--------------------------------------------------------\n");
+                    printf("\n--------------------------------------------------------\n");
+
+                    printf("\nPress a key for back to menu \n");
+                    getch();
+
+                    break;
+
+                default :
+                    fflush(stdin);
+                    system("cls");
+                    adminreports();
+                    break;
+            }
 
             fflush(stdin);
             system("cls");
@@ -4903,12 +6126,243 @@ void adminreports()
 
 
 
+        case 12 :
+            system("cls");
+            printf(" - List of deleted properties :\n\n");
+            fflush(stdin);
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Houses for sale : \n");
+            d = p;
+            while (d != NULL)
+            {
+                if (d->active == 0)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", d->area);
+                    printf("address : %s\n", d->address);
+                    printf("type : %s\n", d->type);
+                    printf("old : %d\n", d->old);
+                    printf("meterage : %d\n", d->meterage);
+                    printf("floor : %d\n", d->floor);
+                    printf("total meterage : %d\n", d->total_meterage);
+                    printf("phone : %s\n", d->phone);
+                    printf("bedroom : %d\n", d->bedroom);
+                    printf("cost : %d Rial\n", d->cost);
+                }
+                d = d->hsnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo Houses for Sell have been removed!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffices for sale : \n");
+            dos = pos;
+            while (dos != NULL)
+            {
+                if (dos->active == 0)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dos->area);
+                    printf("address : %s\n", dos->address);
+                    printf("type : %s\n", dos->type);
+                    printf("old : %d\n", dos->old);
+                    printf("meterage : %d\n", dos->meterage);
+                    printf("floor : %d\n", dos->floor);
+                    printf("total meterage : %d\n", dos->total_meterage);
+                    printf("phone : %s\n", dos->phone);
+                    printf("office room : %d\n", dos->officeroom);
+                    printf("cost : %d Rial\n", dos->cost);
+                }
+                dos = dos->osnext;
+            }
+            if (c == 0)
+            {
+                printf("\nNo Offices for Sell have been removed!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Lands for sale : \n");
+            dls = pls;
+            while (dls != NULL)
+            {
+                if (dls->active == 0)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dls->area);
+                    printf("address : %s\n", dls->address);
+                    printf("type : %s\n", dls->type);
+                    printf("meterage : %d\n", dls->meterage);
+                    printf("phone : %s\n", dls->phone);
+                    printf("cost : %d Rial\n", dls->cost);
+                }
+                dls = dls->lsnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo Lands for Sell have been removed!\n\n");
+            }
+
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nHouses for Rent : \n");
+            dhr = phr;
+            while (dhr != NULL)
+            {
+                if (dhr->active == 0)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dhr->area);
+                    printf("address : %s\n", dhr->address);
+                    printf("type : %s\n", dhr->type);
+                    printf("old : %d\n", dhr->old);
+                    printf("meterage : %d\n", dhr->meterage);
+                    printf("floor : %d\n", dhr->floor);
+                    printf("total meterage : %d\n", dhr->total_meterage);
+                    printf("phone : %s\n", dhr->phone);
+                    printf("bedroom : %d\n", dhr->bedroom);
+                    printf("monthly rent : %d Rial\n", dhr->amount);
+                    printf("mortgage : %d Rial\n", dhr->mortgage);
+                }
+                dhr = dhr->hrnext;
+            }
+
+            if (c == 0)
+            {
+                printf("\n\nNo Houses for Rent have been removed!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\n\nOffice for Rent : \n");
+            dor = por;
+            while (dor != NULL)
+            {
+                if (dor->active == 0)
+                {
+            printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dor->area);
+                    printf("address : %s\n", dor->address);
+                    printf("type : %s\n", dor->type);
+                    printf("old : %d\n", dor->old);
+                    printf("meterage : %d\n", dor->meterage);
+                    printf("floor : %d\n", dor->floor);
+                    printf("total meterage : %d\n", dor->total_meterage);
+                    printf("phone : %s\n", dor->phone);
+                    printf("office room : %d\n", dor->officeroom);
+                    printf("monthly rent : %d Rial\n", dor->amount);
+                    printf("mortgage : %d Rial\n", dor->mortgage);
+                }
+                dor = dor->ornext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo Offices for Rent have been removed!\n\n");
+            }
+            c = 0 ;
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("Lands for Rent : \n");
+            dlr = plr;
+            while (dlr != NULL)
+            {
+                if (dlr->active == 0)
+                {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("area : %d\n", dlr->area);
+                    printf("address : %s\n", dlr->address);
+                    printf("type : %s\n", dlr->type);
+                    printf("meterage : %d\n", dlr->meterage);
+                    printf("phone : %s\n", dlr->phone);
+                    printf("monthly rent : %d Rial\n", dlr->amount);
+                    printf("mortgage : %d Rial\n", dlr->mortgage);
+                }
+                dlr = dlr->lrnext;
+            }
+            if (c == 0)
+            {
+                printf("\n\nNo Lands for Rent have been removed!\n\n");
+            }
+
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+
+            printf("\nPress a key for back to menu \n");
+            getch();
+
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
 
 
+        case 13 :
+            system("cls");
+            current = head;
+            printf(" - List of Users :\n\n");
+            current = head;
+            while (current != NULL)
+            {
+                printf("\n%s\n",current->username);
+                current = current->next;
+            }
+            current = head;
 
+            printf("\n--------------------------------------------------------\n");
+            printf("\n--------------------------------------------------------\n");
+            printf("\nPress a key for back to menu \n");
+            getch();
 
+            fflush(stdin);
+            system("cls");
+            adminreports();
+            break;
 
+        case 14 :
+            fflush(stdin);
+            system("cls");
+            dhr = phr;
+            while (dhr != NULL)
+            {
+                    printf("\n--------------------------------------------------------\n");
+                    c++ ;
+                    printf("\n%d-\n\n",c);
+                    printf("active : %d\n", dhr->active);
+                    printf("area : %d\n", dhr->area);
+                    printf("address : %s\n", dhr->address);
+                    printf("type : %s\n", dhr->type);
+                    printf("old : %d\n", dhr->old);
+                    printf("meterage : %d\n", dhr->meterage);
+                    printf("floor : %d\n", dhr->floor);
+                    printf("total meterage : %d\n", dhr->total_meterage);
+                    printf("phone : %s\n", dhr->phone);
+                    printf("bedroom : %d\n", dhr->bedroom);
+                    printf("Date :  %d - %d - %d \n", dhr->year , dhr->month , dhr->day);
+                    printf("monthly rent : %d Rial\n", dhr->amount);
+                    printf("mortgage : %d Rial\n", dhr->mortgage);
 
+                dhr = dhr->hrnext;
+            }
+            getchar();
+            break;
 
         case 0:
             fflush(stdin);
@@ -4933,6 +6387,7 @@ void settingmelk(int admin)
     fflush(stdin);
     system("cls");
     housesell *p = NULL, *q = NULL;
+
     FILE *fp;
 
     fp = fopen("House-Sell.txt", "r");
@@ -4969,6 +6424,12 @@ void settingmelk(int admin)
         fgets(line, sizeof(line), fp); // Read the bedroom line
         sscanf(line, "%d", &d->bedroom);
         fgets(line, sizeof(line), fp); // Read the cost line
+        sscanf(line, "%d", &d->year);
+        fgets(line, sizeof(line), fp);
+        sscanf(line, "%d", &d->month);
+        fgets(line, sizeof(line), fp);
+        sscanf(line, "%d", &d->day);
+        fgets(line, sizeof(line), fp);
         sscanf(line, "%d", &d->cost);
         fgets(line, sizeof(line), fp); // Read the cost line
         sscanf(line, "%s", &d->writer);
@@ -5028,6 +6489,12 @@ void settingmelk(int admin)
         fgets(lineos, sizeof(lineos), fpos); // Read the bedroom line
         sscanf(lineos, "%d", &dos->officeroom);
         fgets(lineos, sizeof(lineos), fpos); // Read the cost line
+        sscanf(lineos, "%d", &dos->year);
+        fgets(lineos, sizeof(lineos), fpos);
+        sscanf(lineos, "%d", &dos->month);
+        fgets(lineos, sizeof(lineos), fpos);
+        sscanf(lineos, "%d", &dos->day);
+        fgets(lineos, sizeof(lineos), fpos);
         sscanf(lineos, "%d", &dos->cost);
         fgets(lineos, sizeof(lineos), fpos); // Read the cost line
         sscanf(lineos, "%s", &dos->writer);
@@ -5050,10 +6517,6 @@ void settingmelk(int admin)
     fclose(fpos);
 
     officesell *dos = pos;
-
-
-
-
 
     landsell *pls = NULL, *qls = NULL;
     FILE *fpls;
@@ -5084,6 +6547,12 @@ void settingmelk(int admin)
         fgets(linels, sizeof(linels), fpls); // Read the phone line
         sscanf(linels, "%s", dls->phone);
         fgets(linels, sizeof(linels), fpls); // Read the cost line
+        sscanf(linels, "%d", &dls->year);
+        fgets(linels, sizeof(linels), fpls);
+        sscanf(linels, "%d", &dls->month);
+        fgets(linels, sizeof(linels), fpls);
+        sscanf(linels, "%d", &dls->day);
+        fgets(linels, sizeof(linels), fpls);
         sscanf(linels, "%d", &dls->cost);
         fgets(linels, sizeof(linels), fpls); // Read the Writer
         sscanf(linels, "%s", &dls->writer);
@@ -5106,10 +6575,6 @@ void settingmelk(int admin)
     fclose(fpls);
 
     landsell *dls = pls;
-
-
-
-
 
     houserent *phr = NULL, *qhr = NULL;
     FILE *fphr;
@@ -5148,6 +6613,12 @@ void settingmelk(int admin)
         fgets(linehr, sizeof(linehr), fphr); // Read the bedroom line
         sscanf(linehr, "%d", &dhr->bedroom);
         fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->year);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->month);
+        fgets(linehr, sizeof(linehr), fphr);
+        sscanf(linehr, "%d", &dhr->day);
+        fgets(linehr, sizeof(linehr), fphr);
         sscanf(linehr, "%d", &dhr->amount);
         fgets(linehr, sizeof(linehr), fphr);
         sscanf(linehr, "%d", &dhr->mortgage);
@@ -5171,9 +6642,6 @@ void settingmelk(int admin)
 
     fclose(fphr);
     houserent *dhr = phr;
-
-
-
 
 
     officerent *por = NULL, *qor = NULL;
@@ -5214,6 +6682,12 @@ void settingmelk(int admin)
         fgets(lineor, sizeof(lineor), fpor); // Read the bedroom line
         sscanf(lineor, "%d", &dor->officeroom);
         fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->year);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->month);
+        fgets(lineor, sizeof(lineor), fpor);
+        sscanf(lineor, "%d", &dor->day);
+        fgets(lineor, sizeof(lineor), fpor);
         sscanf(lineor, "%d", &dor->amount);
         fgets(lineor, sizeof(lineor), fpor);
         sscanf(lineor, "%d", &dor->mortgage);
@@ -5237,7 +6711,6 @@ void settingmelk(int admin)
 
     fclose(fpor);
     officerent *dor = por;
-
 
     landrent *plr = NULL, *qlr = NULL;
     FILE *fplr;
@@ -5267,7 +6740,13 @@ void settingmelk(int admin)
         sscanf(linelr, "%d", &dlr->meterage);
         fgets(linelr, sizeof(linelr), fplr); // Read the phone line
         sscanf(linelr, "%s", dlr->phone);
-        fgets(linelr, sizeof(linelr), fplr); // Read the bedroom line
+        fgets(linelr, sizeof(linelr), fplr);
+        sscanf(linelr, "%d", &dlr->year);
+        fgets(linelr, sizeof(linelr), fplr);
+        sscanf(linelr, "%d", &dlr->month);
+        fgets(linelr, sizeof(linelr), fplr);
+        sscanf(linelr, "%d", &dlr->day);
+        fgets(linelr, sizeof(linelr), fplr);
         sscanf(linelr, "%d", &dlr->amount);
         fgets(linelr, sizeof(linelr), fplr); // Read the cost line
         sscanf(linelr, "%d", &dlr->mortgage);
@@ -5385,6 +6864,9 @@ void settingmelk(int admin)
                 fprintf(f,"%d\n",d->total_meterage);
                 fprintf(f,"%s\n",d->phone);
                 fprintf(f,"%d\n",d->bedroom);
+                fprintf(f,"%d\n",d->year);
+                fprintf(f,"%d\n",d->month);
+                fprintf(f,"%d\n",d->day);
                 fprintf(f,"%d\n",d->cost);
                 fprintf(f,"%s",d->writer);
 
@@ -5481,6 +6963,9 @@ void settingmelk(int admin)
                 fprintf(fos,"%d\n",dos->total_meterage);
                 fprintf(fos,"%s\n",dos->phone);
                 fprintf(fos,"%d\n",dos->officeroom);
+                fprintf(fos,"%d\n",dos->year);
+                fprintf(fos,"%d\n",dos->month);
+                fprintf(fos,"%d\n",dos->day);
                 fprintf(fos,"%d\n",dos->cost);
                 fprintf(fos,"%s",dos->writer);
 
@@ -5570,6 +7055,9 @@ void settingmelk(int admin)
                 fprintf(fls,"%s\n",dls->type);
                 fprintf(fls,"%d\n",dls->meterage);
                 fprintf(fls,"%s\n",dls->phone);
+                fprintf(fls,"%d\n",dls->year);
+                fprintf(fls,"%d\n",dls->month);
+                fprintf(fls,"%d\n",dls->day);
                 fprintf(fls,"%d\n",dls->cost);
                 fprintf(fls,"%s",dls->writer);
 
@@ -5666,6 +7154,9 @@ void settingmelk(int admin)
                 fprintf(fhr,"%d\n",dhr->total_meterage);
                 fprintf(fhr,"%s\n",dhr->phone);
                 fprintf(fhr,"%d\n",dhr->bedroom);
+                fprintf(fhr,"%d\n",dhr->year);
+                fprintf(fhr,"%d\n",dhr->month);
+                fprintf(fhr,"%d\n",dhr->day);
                 fprintf(fhr,"%d\n",dhr->amount);
                 fprintf(fhr,"%d\n",dhr->mortgage);
                 fprintf(fhr,"%s",dhr->writer);
@@ -5763,6 +7254,9 @@ void settingmelk(int admin)
                 fprintf(fosf,"%d\n",dor->total_meterage);
                 fprintf(fosf,"%s\n",dor->phone);
                 fprintf(fosf,"%d\n",dor->officeroom);
+                fprintf(fosf,"%d\n",dor->year);
+                fprintf(fosf,"%d\n",dor->month);
+                fprintf(fosf,"%d\n",dor->day);
                 fprintf(fosf,"%d\n",dor->amount);
                 fprintf(fosf,"%d\n",dor->mortgage);
                 fprintf(fosf,"%s",dor->writer);
@@ -5853,6 +7347,9 @@ void settingmelk(int admin)
                 fprintf(flr,"%s\n",dlr->type);
                 fprintf(flr,"%d\n",dlr->meterage);
                 fprintf(flr,"%s\n",dlr->phone);
+                fprintf(flr,"%d\n",dlr->year);
+                fprintf(flr,"%d\n",dlr->month);
+                fprintf(flr,"%d\n",dlr->day);
                 fprintf(flr,"%d\n",dlr->amount);
                 fprintf(flr,"%d\n",dlr->mortgage);
                 fprintf(flr,"%s",dlr->writer);

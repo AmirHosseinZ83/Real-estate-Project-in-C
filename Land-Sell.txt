@@ -4,6 +4,9 @@ Qazvin - Haftsangan
 urban
 300
 09191586974
+1402
+10
+30
 10000
 @AmirAbbass
 1
@@ -12,6 +15,9 @@ Qazvin - Aref
 urban
 300
 09192345678
+1402
+10
+30
 8000
 @mohammad
 1
@@ -20,5 +26,19 @@ Qazvin - Farsian
 agricultural
 500
 09174865120
+1402
+11
+6
 15000
 @mohammad
+1
+2
+qazvin - najaf abbad
+urban
+300
+09898763029
+1402
+10
+30
+20000
+ali
