@@ -400,7 +400,8 @@ void su(void)
     int  i1 =0 , t = 0 ;
     while(1)
     {
-        fflush(stdin);
+        t = 0 ;
+        i1 = 0 ;
         gets(people.email);
         fflush(stdin);
         while (people.email[i1] != '\0')
@@ -487,7 +488,7 @@ void si()
 {
 
     printf("Sign In function --- (If you want to go to the menu, press 0)\n");
-    if (tr==1)
+    if (tr==2)
     {
 
         FILE *file;
