@@ -34,3 +34,15 @@ urban
 1000
 1020
 ali
+0
+3
+Qazvin, Abgilac
+urban
+5000
+0999999999
+1402
+11
+17
+200000
+1000
+armin

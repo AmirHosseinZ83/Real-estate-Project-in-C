@@ -488,7 +488,7 @@ void si()
 {
 
     printf("Sign In function --- (If you want to go to the menu, press 0)\n");
-    if (tr==2)
+    if (tr==2 || tr == 1)
     {
 
         FILE *file;
@@ -6847,8 +6847,8 @@ void settingmelk(int admin)
     printf (" 2 - Office - Sell : \n\n");
     printf (" 3 - Land - Sell : \n\n");
     printf (" 4 - House - Rent : \n\n");
-    printf (" 5 - House - Rent : \n\n");
-    printf (" 6 - House - Rent : \n\n");
+    printf (" 5 - Office - Rent : \n\n");
+    printf (" 6 - Land - Rent : \n\n");
     printf ("\n - Press button 0 to return to the Previous Menu\n\n\n>Please Enter Your Choice: ");
     char temp ;
     int c = 0 ;
